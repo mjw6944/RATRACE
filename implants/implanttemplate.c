@@ -5,9 +5,7 @@
 #include <string.h>
 #include <windows.h>
 
-#ifdef _MSC_VER
 #pragma comment(lib, "Ws2_32.lib")
-#endif
 
 #define MAX_COMMAND_LENGTH	256
 #define RECONNECT_DELAY		5000 // milliseconds
@@ -18,6 +16,7 @@ void helpCommand(SOCKET clientSocket) {
 					  "command1 - Description of command 1\n"
 					  "command2 - Description of command 2\n"
 					  "command3 - Description of command 3\n";
+	
 	send(clientSocket, helpText, strlen(helpText), 0);
 }
 
@@ -52,7 +51,7 @@ SOCKET connectToServer() {
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
 
-	getaddrinfo("192.168.197.222", "5555", &hints, &result);
+	getaddrinfo("192.168.197.222", "27015", &hints, &result);
 
 	for(ptr=result; ptr != NULL ;ptr=ptr->ai_next) {
 		ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
@@ -71,7 +70,7 @@ int main() {
 
 	while(1) {
 		ConnectSocket = connectToServer();
-
+		
 		if(ConnectSocket == INVALID_SOCKET) {
 			printf("Failed to connect, retrying in %d seconds...\n", RECONNECT_DELAY/1000);
 			Sleep(RECONNECT_DELAY);
@@ -82,7 +81,7 @@ int main() {
 
 		while(1) {
 			iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
-
+			
 			if(iResult > 0) {
 				recvbuf[iResult] = '\0';
 				handleCommand(recvbuf, ConnectSocket);
