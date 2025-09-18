@@ -69,9 +69,8 @@ void saveBitmapToFile(HBITMAP hBitmap, const char* filePath) {
 void helpCommand(SOCKET clientSocket) {
 	char helpText[] = "Available commands:\n"
 					  "help - Display this help message\n"
-					  "command1 - Description of command 1\n"
-					  "setwallpaper - Set the default wallpaper\n"
-					  "command3 - Description of command 3\n";
+					  "gort - Set the default wallpaper to GORT\n"
+					  "command2 - Description of command 2\n";
 	
 	send(clientSocket, helpText, strlen(helpText), 0);
 }
@@ -81,7 +80,7 @@ void setWallpaperCommand(SOCKET clientSocket) {
 	if(hBitmap) {
 		char tempPath[MAX_PATH];
 		GetTempPath(MAX_PATH, tempPath);
-		strcat(tempPath, "wallpaper.bmp");
+		strcat(tempPath, "gort.bmp");
 		
 		saveBitmapToFile(hBitmap, tempPath);
 		
@@ -93,17 +92,17 @@ void setWallpaperCommand(SOCKET clientSocket) {
 		);
 		
 		if(SUCCEEDED(hr)) {
-			char successMsg[] = "Wallpaper changed successfully\n";
+			char successMsg[] = "GET GORTED ON\n";
 			send(clientSocket, successMsg, strlen(successMsg), 0);
 		} else {
-			char errorMsg[] = "Failed to change wallpaper\n";
+			char errorMsg[] = "Failed to gort on em\n";
 			send(clientSocket, errorMsg, strlen(errorMsg), 0);
 		}
 		
 		DeleteFile(tempPath);
 		DeleteObject(hBitmap);
 	} else {
-		char errorMsg[] = "Failed to load wallpaper image\n";
+		char errorMsg[] = "Failed to load GORT image\n";
 		send(clientSocket, errorMsg, strlen(errorMsg), 0);
 	}
 }
@@ -112,14 +111,11 @@ void handleCommand(char* command, SOCKET clientSocket) {
 	if(strcmp(command, "help") == 0) {
 		helpCommand(clientSocket);
 	}
-	else if(strcmp(command, "command1") == 0) {
-		// Implement command 1 logic here
-	}
 	else if(strcmp(command, "setwallpaper") == 0) {
 		setWallpaperCommand(clientSocket);
 	}
-	else if(strcmp(command, "command3") == 0) {
-		// Implement command 3 logic here
+	else if(strcmp(command, "command2") == 0) {
+		// Implement command 2 logic here
 	}
 	else {
 		char unknownCommand[] = "Unknown command. Type 'help' for available commands.\n";
