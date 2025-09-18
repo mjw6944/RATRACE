@@ -5,7 +5,9 @@
 #include <string.h>
 #include <windows.h>
 
+#ifdef _MSC_VER
 #pragma comment(lib, "Ws2_32.lib")
+#endif
 
 #define MAX_COMMAND_LENGTH	256
 #define RECONNECT_DELAY		5000 // milliseconds
@@ -50,7 +52,7 @@ SOCKET connectToServer() {
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
 
-	getaddrinfo("localhost", "5555", &hints, &result);
+	getaddrinfo("192.168.197.222", "5555", &hints, &result);
 
 	for(ptr=result; ptr != NULL ;ptr=ptr->ai_next) {
 		ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
