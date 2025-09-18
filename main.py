@@ -146,7 +146,7 @@ if __name__ == "__main__":
 			else:
 				log.info("No clients connected")
 		else:
-			resetgui()
+			os.system("clear")
 			ratrace = False
 			splash()
 		resetgui()
