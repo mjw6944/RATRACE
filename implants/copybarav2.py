@@ -9,7 +9,8 @@ from PIL import ImageTk
 def connect():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(("127.0.0.1", 5555))
-    while True:
+    failsafe = 0
+    while failsafe < 20:
         command = s.recv(1024).decode()
         print(command)
         if command == "info":
@@ -19,18 +20,24 @@ def connect():
 					  help - Display this help message\n"
 					  gort - Summons Gort 1\n
 					  bounce - makes an un-closeable bouncing rodent 2\n
-					  command3 - Description of command 3\n"""   
+					  command3 - Description of command 3\n"""
+            print("sending help")
+            s.send(help_text.encode())   
         elif command == "gort":
-            gthread = threading.Thread(target=window())
+            gthread = threading.Thread(target=window)
             gthread.start()
             s.send("GORT IS HERE".encode())
         elif command == "bounce":
-            bthread = threading.Thread(target=bounce())
+            bthread = threading.Thread(target=bounce)
             bthread.start()
             s.send("Triggered Bounce".encode())
         else:
             output = subprocess.getoutput(command)
             s.send(output.encode())
+        if command == "":
+            failsafe += 1
+        else:
+            failsafe = 0
     s.close()
 
 def window():

