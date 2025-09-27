@@ -3,7 +3,7 @@ import subprocess
 import threading
 import time
 import tkinter as tk
-from PIL import ImageTk
+from PIL import Image, ImageTk
 
 
 def connect():
@@ -50,7 +50,8 @@ def window():
     box.attributes('-alpha', 0.6)
     box.protocol("delete", onClosing())
     box.overrideredirect(True)
-    img = ImageTk.PhotoImage(file='gort.png')
+    img = Image.open('gort.png')
+    img = ImageTk.PhotoImage(img)
     label =tk.Label(box, image=img)
     label.pack(expand=True)
     box.mainloop()
@@ -63,7 +64,8 @@ def bounce():
     screen_w = box.winfo_screenwidth()
     screen_h = box.winfo_screenheight()
     state = {"x": 100, "y": 100, "dx": 3, "dy": 3}
-    img= ImageTk.PhotoImage(file='rodent.png')
+    img = Image.open('rodent.png')
+    img = ImageTk.PhotoImage(img)
     box.attributes('-topmost', True)
     label = tk.Label(box, image=img)
     label.pack(expand=True)
