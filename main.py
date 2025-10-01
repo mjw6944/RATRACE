@@ -106,7 +106,8 @@ if __name__ == "__main__":
             if command == "return":
                     run = False
             else:
-                server.send_command(command)
+                output = server.send_command(command)
+                log.info(output)
         runstatus.success()
 
     ratrace = True
@@ -152,7 +153,8 @@ if __name__ == "__main__":
                             if implant[c2choice] == "interactive":
                                 interactive()
                             else:
-                                server.send_command(implant[c2choice])
+                                output = server.send_command(implant[c2choice])
+                                log.info(output)
                             resetgui()
                         else:
                             log.info("Returning...\n")
@@ -161,7 +163,7 @@ if __name__ == "__main__":
                 else:
                     log.info("No clients connected")
         else:
-            C2Server.stop()
+            server.stop
             os.system("clear")
             ratrace = False
             splash()

