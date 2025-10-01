@@ -1,7 +1,6 @@
 ###THINGS TO DO###
 Ratrace / main
 ---Important---
-- Implement a function that removes dead connections from the server list
 - Implement a method of sending a message / command to all clients
 
 ---Nice to have---

