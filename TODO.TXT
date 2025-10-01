@@ -24,3 +24,8 @@ Future
 - implant loader script that utilizes "exec()" to perform fileless execution
     - checks OS to load specific malware types or persistence methods
     - Persistence via register keys or task scheduler executed at system level
+
+---New Implants---
+- Mimikitty - bootleg mimikatz utilizing "store passwords using reversible encryption" setting
+- Canadian Ransomware - ransomware that only encrypts one file, you have to play hockey or do canadian trivia to
+    unencrypt the data, the ransomware is polite in all its messaging
