@@ -18,6 +18,9 @@ copybarav2
 	- update help message to ensure the following
 
 Future
+---Important---
+- some docker-esk way to ensure proper libraries / functions are installed upon setup
 - Setup script that automatically generates payloads given an (attacker) IP address
-- Persistence
- 
+- implant loader script that utilizes "exec()" to perform fileless execution
+    - checks OS to load specific malware types or persistence methods
+    - Persistence via register keys or task scheduler executed at system level
