@@ -1,0 +1,23 @@
+###THINGS TO DO###
+Ratrace / main
+---Important---
+- Impliment a function that removes dead connections from the server list
+- Impliment a method of sending a message / command to all clients
+
+---Nice to have---
+- clean up current code
+- impliment a themes feature
+- make exit function more fun (goodbye messages)
+- Splash art for all implants / RATRACE
+
+copybarav2
+---Important---
+- Auto restart entire function when error
+- Impliment a time limit on all functions
+- Add an interactive only command that allows changing of time
+	- update help message to ensure the following
+
+Future
+- Setup script that automatically generates payloads given an (attacker) IP address
+- Persistence
+ 
