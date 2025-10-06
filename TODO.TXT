@@ -12,7 +12,7 @@ Ratrace / main
 copybarav2
 ---Important---
 - Auto restart entire function when error
-- Implement a time limit on all functions
+- Store images in base 64 to reduce footprint
 - Add an interactive only command that allows changing of time
 	- update help message to ensure the following
 
