@@ -1,20 +1,18 @@
 ###THINGS TO DO###
 Ratrace / main
 ---Important---
-- Implement a method of sending a message / command to all clients
+- Improve sendall to not suck
+- gather hostnames and such
 
 ---Nice to have---
-- clean up current code
 - implement a themes feature
 - make exit function more fun (goodbye messages)
-- Splash art for all implants / RATRACE
+- make a fun.py file to hold splash art and goodbye message code
 
 copybarav2
 ---Important---
-- Auto restart entire function when error
+- Auto restart entire function when error #might not be needed? Stress test when possible
 - Store images in base 64 to reduce footprint
-- Add an interactive only command that allows changing of time
-	- update help message to ensure the following
 
 Future
 ---Important---
