@@ -144,4 +144,4 @@ if __name__ == "__main__":
             connect()
         except Exception as e:
             time.sleep(5)
-#implants>pyinstaller --onedir --add-data "copydata/*.png:copydata/" --icon="copydata/icon.ico" copybarav2.py
+#implants>pyinstaller --onefile --add-data "copydata/*.png:copydata/" --icon="copydata/icon.ico" copybarav2.py
