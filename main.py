@@ -134,7 +134,7 @@ if __name__ == "__main__":
                 if sendall:
                     for i in range(len(server.clients)):
                         server.select_client(i)
-                        if operatingSystem is None or server.send_command('python -c "import os; print(os.name)"') != operatingSystem:
+                        if operatingSystem is not None and server.send_command('python -c "import os; print(os.name)"') != operatingSystem:
                             pass
                         else:
                             output = server.send_command(command)
