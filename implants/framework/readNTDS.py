@@ -27,7 +27,7 @@ from collections import OrderedDict
 from datetime import datetime
 from struct import unpack, pack
 from Crypto.Cipher import DES, ARC4, AES
-from structure import Structure
+from .structure import Structure
 
 LOG = logging.getLogger(__name__)
 LOG.addHandler(NullHandler())
