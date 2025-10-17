@@ -29,7 +29,7 @@ from Crypto.Cipher import ARC4
 import sys
 sys.path.append('../framework')
 
-from framework.readNTDS import ntlm, LOG
+from framework import ntlm
 from framework.structure import Structure, pack, unpack
 from framework.krb5 import kerberosv5, gssapi
 from framework.uuid import uuidtup_to_bin, generate, stringver_to_bin, bin_to_uuidtup, bin_to_string
@@ -2251,7 +2251,7 @@ class DCERPCServer(Thread):
             if reason == 0:
                 result = MSRPC_CONT_RESULT_ACCEPT
             if reason == 1:
-                LOG.error('Bind request for an unsupported interface %s' % bin_to_string(item['AbstractSyntax']))
+                print("error :(")
 
             resp['ctx_num'] += 1
             itemResult = CtxItemResult()
@@ -2283,8 +2283,7 @@ class DCERPCServer(Thread):
                 returnData = self._listenUUIDS[self._boundUUID]['CallBacks'][request['op_num']](request['pduData'])
                 response['pduData'] = returnData
             else:
-                LOG.error('Unsupported DCERPC opnum %d called for interface %s' % (request['op_num'],
-                                                                                   bin_to_uuidtup(self._boundUUID)))
+                print("Error :(")
                 response['type'] = MSRPC_FAULT
                 response['pduData'] = pack('<L', 0x000006E4)
             response['frag_len'] = len(response)
