@@ -33,9 +33,9 @@ from binascii import hexlify
 
 from framework.structure import Structure
 import .crypto, .constants, .types
-from asn1 import AS_REP, seq_set, TGS_REP, EncTGSRepPart, EncASRepPart, Ticket, KRB_CRED, \
+from .asn1 import AS_REP, seq_set, TGS_REP, EncTGSRepPart, EncASRepPart, Ticket, KRB_CRED, \
     EncKrbCredPart, KrbCredInfo, seq_set_iter
-from types import KerberosTime
+from .types import KerberosTime
 
 try:
     FileNotFoundError

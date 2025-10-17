@@ -33,8 +33,8 @@ from framework import ntlm
 from framework.structure import Structure, pack, unpack
 from framework.krb5 import kerberosv5, gssapi
 from framework.uuid import uuidtup_to_bin, generate, stringver_to_bin, bin_to_uuidtup, bin_to_string
-from dtypes import UCHAR, ULONG, USHORT
-from ndr import NDRSTRUCT
+from .dtypes import UCHAR, ULONG, USHORT
+from .ndr import NDRSTRUCT
 from threading import Thread
 
 # MS/RPC Constants

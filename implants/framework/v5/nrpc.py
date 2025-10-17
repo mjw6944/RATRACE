@@ -28,15 +28,15 @@ from struct import pack, unpack
 from six import b
 import sys
 sys.path.append('../framework')
-from ndr import NDRCALL, NDRSTRUCT, NDRENUM, NDRUNION, NDRPOINTER, NDRUniConformantArray, \
+from .ndr import NDRCALL, NDRSTRUCT, NDRENUM, NDRUNION, NDRPOINTER, NDRUniConformantArray, \
     NDRUniFixedArray, NDRUniConformantVaryingArray
-from dtypes import WSTR, LPWSTR, DWORD, ULONG, USHORT, PGUID, NTSTATUS, NULL, LONG, UCHAR, PRPC_SID, \
+from .dtypes import WSTR, LPWSTR, DWORD, ULONG, USHORT, PGUID, NTSTATUS, NULL, LONG, UCHAR, PRPC_SID, \
     GUID, RPC_UNICODE_STRING, SECURITY_INFORMATION, LPULONG, ULONGLONG
 from framework.uuid import uuidtup_to_bin
-from enum import Enum
+from .enum import Enum
 from framework.samr import OLD_LARGE_INTEGER
-from lsad import PLSA_FOREST_TRUST_INFORMATION
-from rpcrt import DCERPCException
+from .lsad import PLSA_FOREST_TRUST_INFORMATION
+from .rpcrt import DCERPCException
 from framework.structure import Structure
 from framework import ntlm, crypto
 import hmac
