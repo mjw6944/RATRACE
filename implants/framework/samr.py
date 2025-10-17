@@ -36,7 +36,7 @@ from framework.v5.dtypes import NULL, RPC_UNICODE_STRING, ULONG, USHORT, UCHAR, 
 from framework.v5.rpcrt import DCERPCException
 from uuid import uuidtup_to_bin
 from framework.v5.enum import Enum
-from structure import Structure
+from .structure import Structure
 
 import struct
 import os
