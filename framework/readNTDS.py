@@ -5,18 +5,173 @@ SUE ME
 """
 from __future__ import division
 from __future__ import print_function
+
+import codecs
 import hashlib
 import os
 import logging
+import random
+import string
+
+import samr
+import drsuapi
+import ntlm
+from six import PY2, b
+from ese import ESENT_DB
+from logging import NullHandler
 from binascii import unhexlify, hexlify
 from collections import OrderedDict
 from datetime import datetime
-from struct import unpack
-
+from struct import unpack, pack
+from Crypto.Cipher import DES, ARC4, AES
 from structure import Structure
 
 LOG = logging.getLogger(__name__)
 LOG.addHandler(NullHandler())
+
+STATUS_MORE_ENTRIES = 0x00000105
+
+class SAMR_RPC_SID_IDENTIFIER_AUTHORITY(Structure):
+    structure = (
+        ('Value','6s'),
+    )
+
+class SAMR_RPC_SID(Structure):
+    structure = (
+        ('Revision','<B'),
+        ('SubAuthorityCount','<B'),
+        ('IdentifierAuthority',':',SAMR_RPC_SID_IDENTIFIER_AUTHORITY),
+        ('SubLen','_-SubAuthority','self["SubAuthorityCount"]*4'),
+        ('SubAuthority',':'),
+    )
+
+def _print_helper(*args, **kwargs):
+    print(args[-1])
+
+def openFile(fileName, mode='w+', openFileFunc=None):
+    if openFileFunc is not None:
+        return openFileFunc(fileName, mode)
+    else:
+        return codecs.open(fileName, mode, encoding='utf-8')
+
+def transformKey(InputKey):
+    # Section 5.1.3
+    OutputKey = []
+    OutputKey.append( chr(ord(InputKey[0:1]) >> 0x01) )
+    OutputKey.append( chr(((ord(InputKey[0:1])&0x01)<<6) | (ord(InputKey[1:2])>>2)) )
+    OutputKey.append( chr(((ord(InputKey[1:2])&0x03)<<5) | (ord(InputKey[2:3])>>3)) )
+    OutputKey.append( chr(((ord(InputKey[2:3])&0x07)<<4) | (ord(InputKey[3:4])>>4)) )
+    OutputKey.append( chr(((ord(InputKey[3:4])&0x0F)<<3) | (ord(InputKey[4:5])>>5)) )
+    OutputKey.append( chr(((ord(InputKey[4:5])&0x1F)<<2) | (ord(InputKey[5:6])>>6)) )
+    OutputKey.append( chr(((ord(InputKey[5:6])&0x3F)<<1) | (ord(InputKey[6:7])>>7)) )
+    OutputKey.append( chr(ord(InputKey[6:7]) & 0x7F) )
+
+    for i in range(8):
+        OutputKey[i] = chr((ord(OutputKey[i]) << 1) & 0xfe)
+
+    return b("".join(OutputKey))
+
+class CryptoCommon:
+    # Common crypto stuff used over different classes
+    def deriveKey(self, baseKey):
+        # 2.2.11.1.3 Deriving Key1 and Key2 from a Little-Endian, Unsigned Integer Key
+        # Let I be the little-endian, unsigned integer.
+        # Let I[X] be the Xth byte of I, where I is interpreted as a zero-base-index array of bytes.
+        # Note that because I is in little-endian byte order, I[0] is the least significant byte.
+        # Key1 is a concatenation of the following values: I[0], I[1], I[2], I[3], I[0], I[1], I[2].
+        # Key2 is a concatenation of the following values: I[3], I[0], I[1], I[2], I[3], I[0], I[1]
+        key = pack('<L', baseKey)
+        key1 = [key[0], key[1], key[2], key[3], key[0], key[1], key[2]]
+        key2 = [key[3], key[0], key[1], key[2], key[3], key[0], key[1]]
+        if PY2:
+            return transformKey(b''.join(key1)), transformKey(b''.join(key2))
+        else:
+            return transformKey(bytes(key1)), transformKey(bytes(key2))
+
+    @staticmethod
+    def decryptAES(key, value, iv=b'\x00' * 16):
+        plainText = b''
+        if iv != b'\x00' * 16:
+            aes256 = AES.new(key, AES.MODE_CBC, iv)
+
+        for index in range(0, len(value), 16):
+            if iv == b'\x00' * 16:
+                aes256 = AES.new(key, AES.MODE_CBC, iv)
+            cipherBuffer = value[index:index + 16]
+            # Pad buffer to 16 bytes
+            if len(cipherBuffer) < 16:
+                cipherBuffer += b'\x00' * (16 - len(cipherBuffer))
+            plainText += aes256.decrypt(cipherBuffer)
+
+        return plainText
+
+    @staticmethod
+    def encryptAES(key, value, iv=b'\x00' * 16):
+        cipherText = b''
+        if iv != b'\x00' * 16:
+            aes256 = AES.new(key, AES.MODE_CBC, iv)
+
+        # Pad input to 16 bytes using PKCS7
+        pad = 16 - (len(value) % 16)
+        value += bytes([pad] * pad)
+
+        for index in range(0, len(value), 16):
+            if iv == b'\x00' * 16:
+                aes256 = AES.new(key, AES.MODE_CBC, iv)
+            plainBuffer = value[index:index + 16]
+            cipherText += aes256.encrypt(plainBuffer)
+
+        return cipherText
+
+class ResumeSessionMgrInFile(object):
+    def __init__(self, resumeFileName=None):
+        self.__resumeFileName = resumeFileName
+        self.__resumeFile = None
+        self.__hasResumeData = resumeFileName is not None
+
+    def hasResumeData(self):
+        return self.__hasResumeData
+
+    def clearResumeData(self):
+        self.endTransaction()
+        if self.__resumeFileName and os.path.isfile(self.__resumeFileName):
+            os.remove(self.__resumeFileName)
+
+    def writeResumeData(self, data):
+        # self.beginTransaction() must be called first, but we are aware of performance here, so we avoid checking that
+        self.__resumeFile.seek(0, 0)
+        self.__resumeFile.truncate(0)
+        self.__resumeFile.write(data.encode())
+        self.__resumeFile.flush()
+
+    def getResumeData(self):
+        try:
+            self.__resumeFile = open(self.__resumeFileName,'rb')
+        except Exception as e:
+            raise Exception('Cannot open resume session file name %s' % str(e))
+        resumeSid = self.__resumeFile.read()
+        self.__resumeFile.close()
+        # Truncate and reopen the file as wb+
+        self.__resumeFile = open(self.__resumeFileName,'wb+')
+        return resumeSid.decode('utf-8')
+
+    def getFileName(self):
+        return self.__resumeFileName
+
+    def beginTransaction(self):
+        if not self.__resumeFileName:
+            self.__resumeFileName = 'sessionresume_%s' % ''.join(random.choice(string.ascii_letters) for _ in range(8))
+            LOG.debug('Session resume file will be %s' % self.__resumeFileName)
+        if not self.__resumeFile:
+            try:
+                self.__resumeFile = open(self.__resumeFileName, 'wb+')
+            except Exception as e:
+                raise Exception('Cannot create "%s" resume session file: %s' % (self.__resumeFileName, str(e)))
+
+    def endTransaction(self):
+        if self.__resumeFile:
+            self.__resumeFile.close()
+            self.__resumeFile = None
 
 class NTDSHashes:
     class SECRET_TYPE:
@@ -808,8 +963,7 @@ class NTDSHashes:
 
                     if crackedName['pmsgOut']['V1']['pResult']['cItems'] == 1:
                         if crackedName['pmsgOut']['V1']['pResult']['rItems'][0]['status'] != 0:
-                            raise Exception("%s: %s" % system_errors.ERROR_MESSAGES[
-                                0x2114 + crackedName['pmsgOut']['V1']['pResult']['rItems'][0]['status']])
+                            raise Exception("its dead jim")
 
                         userRecord = self.__remoteOps.DRSGetNCChangesGuid(
                             crackedName['pmsgOut']['V1']['pResult']['rItems'][0]['pName'][:-1])
@@ -854,8 +1008,7 @@ class NTDSHashes:
 
                             if crackedName['pmsgOut']['V1']['pResult']['cItems'] == 1:
                                 if crackedName['pmsgOut']['V1']['pResult']['rItems'][0]['status'] != 0:
-                                    raise Exception("%s: %s" % system_errors.ERROR_MESSAGES[
-                                        0x2114 + crackedName['pmsgOut']['V1']['pResult']['rItems'][0]['status']])
+                                    raise Exception("Oh no! Our Table! Its Broken!")
 
                                 userRecord = self.__remoteOps.DRSGetNCChangesGuid(
                                     crackedName['pmsgOut']['V1']['pResult']['rItems'][0]['pName'][:-1])
@@ -917,8 +1070,7 @@ class NTDSHashes:
 
                                 if crackedName['pmsgOut']['V1']['pResult']['cItems'] == 1:
                                     if crackedName['pmsgOut']['V1']['pResult']['rItems'][0]['status'] != 0:
-                                        LOG.error("%s: %s" % system_errors.ERROR_MESSAGES[
-                                            0x2114 + crackedName['pmsgOut']['V1']['pResult']['rItems'][0]['status']])
+                                        LOG.error("Yes, this is an error")
                                         break
                                     userRecord = self.__remoteOps.DRSGetNCChangesGuid(
                                         crackedName['pmsgOut']['V1']['pResult']['rItems'][0]['pName'][:-1])
