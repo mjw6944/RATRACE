@@ -28,7 +28,7 @@ from Crypto.Cipher import DES, AES
 import sys
 sys.path.append('../implants')
 from struct import pack, unpack
-from implants.framework.structure import Structure
+from structure import Structure
 import hmac, hashlib
 from six import b
 

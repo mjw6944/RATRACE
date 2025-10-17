@@ -34,16 +34,16 @@ from struct import pack
 import six
 from six import PY2
 
-from implants.framework.v5.ndr import NDRCALL, NDRSTRUCT, NDRPOINTER, NDRUniConformantArray, NDRUNION, NDR, NDRENUM
-from implants.framework.v5.dtypes import PUUID, DWORD, NULL, GUID, LPWSTR, BOOL, ULONG, UUID, LONGLONG, ULARGE_INTEGER, LARGE_INTEGER
-from implants.framework.structure import Structure
-from implants.framework.uuid import uuidtup_to_bin, string_to_bin
-from implants.framework.v5.enum import Enum
-from implants.framework.v5.rpcrt import DCERPCException
-from implants.framework.krb5 import crypto
+from v5.ndr import NDRCALL, NDRSTRUCT, NDRPOINTER, NDRUniConformantArray, NDRUNION, NDR, NDRENUM
+from v5.dtypes import PUUID, DWORD, NULL, GUID, LPWSTR, BOOL, ULONG, UUID, LONGLONG, ULARGE_INTEGER, LARGE_INTEGER
+from structure import Structure
+from uuid import uuidtup_to_bin, string_to_bin
+from v5.enum import Enum
+from v5.rpcrt import DCERPCException
+from krb5 import crypto
 from pyasn1.type import univ
 from pyasn1.codec.ber import decoder
-from implants.framework.crypto import transformKey
+from crypto import transformKey
 
 try:
     from Crypto.Cipher import ARC4, DES

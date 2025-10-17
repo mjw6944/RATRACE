@@ -22,13 +22,13 @@ import random
 import string
 from six import b
 import sys
-sys.path.append('../implants/framework')
+sys.path.append('../framework')
 
 from Crypto.Hash import HMAC, MD5
 from Crypto.Cipher import ARC4
 
-from implants.framework.structure import Structure
-from implants.framework.krb5 import constants, crypto
+from framework.structure import Structure
+from framework.krb5 import constants, crypto
 
 # Our random number generator
 try:

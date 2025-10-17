@@ -23,7 +23,7 @@ import string
 import binascii
 from six import b
 
-from implants.framework.structure import Structure
+from structure import Structure
 
 # This is important. NTLMv2 is not negotiated by the client or server.
 # It is used if set locally on both sides. Change this item if you don't want to use

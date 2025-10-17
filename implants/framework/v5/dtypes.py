@@ -21,12 +21,12 @@ from struct import pack, unpack
 from six import binary_type
 
 import sys
-sys.path.append('../implants/framework')
+sys.path.append('../framework')
 
-from implants.framework.v5.ndr import NDRULONG, NDRUHYPER, NDRSHORT, NDRLONG, NDRPOINTER, NDRUniConformantArray, \
+from framework.v5.ndr import NDRULONG, NDRUHYPER, NDRSHORT, NDRLONG, NDRPOINTER, NDRUniConformantArray, \
     NDRUniFixedArray, NDR, NDRHYPER, NDRSMALL, NDRPOINTERNULL, NDRSTRUCT, \
     NDRUSMALL, NDRBOOLEAN, NDRUSHORT, NDRFLOAT, NDRDOUBLEFLOAT, NULL
-from implants.framework.structure import Structure
+from framework.structure import Structure
 
 DWORD = NDRULONG
 BOOL = NDRULONG

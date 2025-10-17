@@ -23,7 +23,7 @@ from __future__ import print_function
 from datetime import datetime, timezone
 import os
 import sys
-sys.path.append('../implants/framework')
+sys.path.append('../framework')
 from struct import pack, unpack, calcsize
 from six import b, PY2
 
@@ -31,11 +31,11 @@ from pyasn1.codec.der import decoder, encoder
 from pyasn1.type.univ import noValue
 from binascii import hexlify
 
-from implants.framework.structure import Structure
-from implants.framework.krb5 import crypto, constants, types
-from implants.framework.krb5.asn1 import AS_REP, seq_set, TGS_REP, EncTGSRepPart, EncASRepPart, Ticket, KRB_CRED, \
+from framework.structure import Structure
+from framework.krb5 import crypto, constants, types
+from framework.krb5.asn1 import AS_REP, seq_set, TGS_REP, EncTGSRepPart, EncASRepPart, Ticket, KRB_CRED, \
     EncKrbCredPart, KrbCredInfo, seq_set_iter
-from implants.framework.krb5.types import KerberosTime
+from framework.krb5.types import KerberosTime
 
 try:
     FileNotFoundError

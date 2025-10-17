@@ -30,19 +30,19 @@ from six import b
 from binascii import unhexlify, hexlify
 
 import sys
-sys.path.append('../implants/framework')
+sys.path.append('../framework')
 
-from implants.framework.krb5.asn1 import AS_REQ, AP_REQ, TGS_REQ, KERB_PA_PAC_REQUEST, KRB_ERROR, PA_ENC_TS_ENC, AS_REP, TGS_REP, \
+from framework.krb5.asn1 import AS_REQ, AP_REQ, TGS_REQ, KERB_PA_PAC_REQUEST, KRB_ERROR, PA_ENC_TS_ENC, AS_REP, TGS_REP, \
     EncryptedData, Authenticator, EncASRepPart, EncTGSRepPart, seq_set, seq_set_iter, KERB_ERROR_DATA, METHOD_DATA, \
     ETYPE_INFO2, ETYPE_INFO, AP_REP, EncAPRepPart, KERB_SUPERSEDED_BY_USER
-from implants.framework.krb5.types import KerberosTime, Principal, Ticket
-from implants.framework.krb5.gssapi import CheckSumField, GSS_C_DCE_STYLE, GSS_C_MUTUAL_FLAG, GSS_C_REPLAY_FLAG, \
+from framework.krb5.types import KerberosTime, Principal, Ticket
+from framework.krb5.gssapi import CheckSumField, GSS_C_DCE_STYLE, GSS_C_MUTUAL_FLAG, GSS_C_REPLAY_FLAG, \
     GSS_C_SEQUENCE_FLAG, GSS_C_CONF_FLAG, GSS_C_INTEG_FLAG
-from implants.framework.krb5 import constants
+from framework.krb5 import constants
 from crypto import Key, _enctype_table, InvalidChecksum
-from implants.framework.spnego import SPNEGO_NegTokenInit, TypesMech, SPNEGO_NegTokenResp, ASN1_OID, asn1encode, ASN1_AID
-from implants.framework.krb5.gssapi import KRB5_AP_REQ
-from implants.framework.krb5.ccache import CCache
+from framework.spnego import SPNEGO_NegTokenInit, TypesMech, SPNEGO_NegTokenResp, ASN1_OID, asn1encode, ASN1_AID
+from framework.krb5.gssapi import KRB5_AP_REQ
+from framework.krb5.ccache import CCache
 
 # Our random number generator
 try:

@@ -21,14 +21,14 @@
 from __future__ import division
 from __future__ import print_function
 import sys
-sys.path.append('../implants/framework')
+sys.path.append('../framework')
 import random
 import inspect
 import logging
 from struct import pack, unpack_from, calcsize
 from six import with_metaclass, PY3
 from enum import Enum
-from implants.framework.uuid import uuidtup_to_bin
+from framework.uuid import uuidtup_to_bin
 
 LOG = logging.getLogger(__name__)
 LOG.addHandler(logging.NullHandler())

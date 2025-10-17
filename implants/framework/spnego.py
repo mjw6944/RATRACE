@@ -21,7 +21,7 @@ import sys
 sys.path.append('../implants')
 from struct import pack, unpack, calcsize
 
-from implants.framework import ntlm
+import ntlm
 from Crypto.Cipher import ARC4
 
 ############### GSS Stuff ################

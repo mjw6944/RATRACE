@@ -16,9 +16,9 @@ import logging
 import random
 import string
 
-from implants.framework import samr
-from implants.framework import drsuapi
-from implants.framework import ntlm
+from framework import samr
+from framework import drsuapi
+from framework import ntlm
 from six import PY2, b
 from ese import ESENT_DB
 from logging import NullHandler
@@ -27,7 +27,7 @@ from collections import OrderedDict
 from datetime import datetime
 from struct import unpack, pack
 from Crypto.Cipher import DES, ARC4, AES
-from implants.framework.structure import Structure
+from structure import Structure
 
 LOG = logging.getLogger(__name__)
 LOG.addHandler(NullHandler())
