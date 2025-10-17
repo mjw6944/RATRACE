@@ -30,13 +30,13 @@ from ndr import NDRCALL, NDRSTRUCT, NDRENUM, NDRUNION, NDRPOINTER, NDRUniConform
     NDRUniFixedArray, NDRUniConformantVaryingArray
 from dtypes import WSTR, LPWSTR, DWORD, ULONG, USHORT, PGUID, NTSTATUS, NULL, LONG, UCHAR, PRPC_SID, \
     GUID, RPC_UNICODE_STRING, SECURITY_INFORMATION, LPULONG, ULONGLONG
-from framework.uuid import uuidtup_to_bin
+from implants.framework.uuid import uuidtup_to_bin
 from enum import Enum
-from framework.samr import OLD_LARGE_INTEGER
+from implants.framework.samr import OLD_LARGE_INTEGER
 from lsad import PLSA_FOREST_TRUST_INFORMATION
 from rpcrt import DCERPCException
-from framework.structure import Structure
-from framework import ntlm, crypto
+from implants.framework.structure import Structure
+from implants.framework import ntlm, crypto
 import hmac
 import hashlib
 from Crypto.Cipher import DES, AES, ARC4
@@ -1125,7 +1125,7 @@ class PNETLOGON_DELTA_RENAME_GROUP(NDRPOINTER):
 
 
 # 2.2.1.5.14 NLPR_LOGON_HOURS
-from framework.samr import SAMPR_LOGON_HOURS
+from implants.framework.samr import SAMPR_LOGON_HOURS
 
 NLPR_LOGON_HOURS = SAMPR_LOGON_HOURS
 

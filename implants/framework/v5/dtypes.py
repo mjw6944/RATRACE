@@ -20,10 +20,10 @@ from __future__ import print_function
 from struct import pack, unpack
 from six import binary_type
 
-from ndr import NDRULONG, NDRUHYPER, NDRSHORT, NDRLONG, NDRPOINTER, NDRUniConformantArray, \
+from implants.framework.v5.ndr import NDRULONG, NDRUHYPER, NDRSHORT, NDRLONG, NDRPOINTER, NDRUniConformantArray, \
     NDRUniFixedArray, NDR, NDRHYPER, NDRSMALL, NDRPOINTERNULL, NDRSTRUCT, \
     NDRUSMALL, NDRBOOLEAN, NDRUSHORT, NDRFLOAT, NDRDOUBLEFLOAT, NULL
-from framework.structure import Structure
+from implants.framework.structure import Structure
 
 DWORD = NDRULONG
 BOOL = NDRULONG

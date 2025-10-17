@@ -15,7 +15,7 @@
 # Author:
 #   Alberto Solino (@agsolino)
 #
-from framework.v5.enum import Enum
+from implants.framework.v5.enum import Enum
 
 
 def encodeFlags(flags):

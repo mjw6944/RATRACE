@@ -29,11 +29,11 @@ from pyasn1.codec.der import decoder, encoder
 from pyasn1.type.univ import noValue
 from binascii import hexlify
 
-from framework.structure import Structure
-from framework.krb5 import crypto, constants, types
-from framework.krb5.asn1 import AS_REP, seq_set, TGS_REP, EncTGSRepPart, EncASRepPart, Ticket, KRB_CRED, \
+from implants.framework.structure import Structure
+from implants.framework.krb5 import crypto, constants, types
+from implants.framework.krb5.asn1 import AS_REP, seq_set, TGS_REP, EncTGSRepPart, EncASRepPart, Ticket, KRB_CRED, \
     EncKrbCredPart, KrbCredInfo, seq_set_iter
-from framework.krb5.types import KerberosTime
+from implants.framework.krb5.types import KerberosTime
 
 try:
     FileNotFoundError

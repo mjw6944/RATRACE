@@ -44,8 +44,8 @@ import struct
 from pyasn1.codec.der import decoder
 from six import ensure_binary
 
-from framework.krb5 import asn1
-from framework.krb5 import constants
+from implants.framework.krb5 import asn1
+from implants.framework.krb5 import constants
 
 
 class KerberosException(Exception):

@@ -46,7 +46,7 @@
 #
 from pyasn1.type import tag, namedtype, univ, constraint, char, useful
 
-from framework.krb5 import constants
+from implants.framework.krb5 import constants
 
 
 def _application_tag(tag_value):

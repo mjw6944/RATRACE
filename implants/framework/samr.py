@@ -27,14 +27,14 @@ from __future__ import division
 from __future__ import print_function
 from binascii import unhexlify
 
-from v5.ndr import NDRCALL, NDR, NDRSTRUCT, NDRUNION, NDRPOINTER, NDRUniConformantArray, \
+from implants.framework.v5.ndr import NDRCALL, NDR, NDRSTRUCT, NDRUNION, NDRPOINTER, NDRUniConformantArray, \
     NDRUniConformantVaryingArray, NDRENUM
-from v5.dtypes import NULL, RPC_UNICODE_STRING, ULONG, USHORT, UCHAR, LARGE_INTEGER, RPC_SID, LONG, STR, \
+from implants.framework.v5.dtypes import NULL, RPC_UNICODE_STRING, ULONG, USHORT, UCHAR, LARGE_INTEGER, RPC_SID, LONG, STR, \
     LPBYTE, SECURITY_INFORMATION, PRPC_SID, PRPC_UNICODE_STRING, LPWSTR
-from v5.rpcrt import DCERPCException
-from uuid import uuidtup_to_bin
-from v5.enum import Enum
-from structure import Structure
+from implants.framework.v5.rpcrt import DCERPCException
+from implants.framework.uuid import uuidtup_to_bin
+from implants.framework.v5.enum import Enum
+from implants.framework.structure import Structure
 
 import struct
 import os

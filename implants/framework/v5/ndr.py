@@ -26,7 +26,7 @@ import logging
 from struct import pack, unpack_from, calcsize
 from six import with_metaclass, PY3
 from enum import Enum
-from framework.uuid import uuidtup_to_bin
+from implants.framework.uuid import uuidtup_to_bin
 
 LOG = logging.getLogger(__name__)
 LOG.addHandler(logging.NullHandler())

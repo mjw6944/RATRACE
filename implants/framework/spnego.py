@@ -19,7 +19,7 @@ from __future__ import division
 from __future__ import print_function
 from struct import pack, unpack, calcsize
 
-from framework import ntlm
+from implants.framework import ntlm
 from Crypto.Cipher import ARC4
 
 ############### GSS Stuff ################
