@@ -20,7 +20,7 @@ from framework import samr
 from framework import drsuapi
 from framework import ntlm
 from six import PY2, b
-from ese import ESENT_DB
+from .ese import ESENT_DB
 from logging import NullHandler
 from binascii import unhexlify, hexlify
 from collections import OrderedDict

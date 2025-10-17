@@ -38,7 +38,7 @@ except:
         from ordereddict.ordereddict import OrderedDict
     except:
         from ordereddict import OrderedDict
-from structure import Structure, hexdump
+from .structure import Structure, hexdump
 from struct import unpack
 from binascii import hexlify
 from six import b

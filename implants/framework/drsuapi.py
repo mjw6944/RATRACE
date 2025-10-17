@@ -36,14 +36,14 @@ from six import PY2
 
 from framework.v5.ndr import NDRCALL, NDRSTRUCT, NDRPOINTER, NDRUniConformantArray, NDRUNION, NDR, NDRENUM
 from framework.v5.dtypes import PUUID, DWORD, NULL, GUID, LPWSTR, BOOL, ULONG, UUID, LONGLONG, ULARGE_INTEGER, LARGE_INTEGER
-from structure import Structure
-from uuid import uuidtup_to_bin, string_to_bin
+from .structure import Structure
+from .uuid import uuidtup_to_bin, string_to_bin
 from framework.v5.enum import Enum
 from framework.v5.rpcrt import DCERPCException
 from framework.krb5 import crypto
 from pyasn1.type import univ
 from pyasn1.codec.ber import decoder
-from crypto import transformKey
+from .crypto import transformKey
 
 try:
     from Crypto.Cipher import ARC4, DES

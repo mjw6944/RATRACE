@@ -49,7 +49,7 @@ sys.path.append('../framework')
 
 from pyasn1.type import tag, namedtype, univ, constraint, char, useful
 
-import .constants
+from . import constants
 
 
 def _application_tag(tag_value):

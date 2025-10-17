@@ -297,12 +297,12 @@ def get_hashes(h, sam_key):
         # print(':'.join([username, str(int(regkeyname.decode('utf-8'), 16)), lm_hash, ntlm_hash]))
 
 def getsyskey(argv):
-    if len(argv) != 3:
-        print('Usage:\nsamdumpy2 SAM SYSTEM\n')
-        return
+    #if len(argv) != 3:
+    #    print('Usage:\nsamdumpy2 SAM SYSTEM\n')
+    #    return
 
     # Open bootkey file
-    sys_key = get_bootkey(argv[2])
+    sys_key = get_bootkey(argv.split(" ")[1])
     return(sys_key.hex())
 
     # Initialize registry access function
