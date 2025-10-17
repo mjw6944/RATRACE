@@ -296,22 +296,22 @@ def get_hashes(h, sam_key):
 
         # print(':'.join([username, str(int(regkeyname.decode('utf-8'), 16)), lm_hash, ntlm_hash]))
 
-def main(argv):
+def getsyskey(argv):
     if len(argv) != 3:
         print('Usage:\nsamdumpy2 SAM SYSTEM\n')
         return
 
     # Open bootkey file
     sys_key = get_bootkey(argv[2])
-    print(f'SysKey: {sys_key.hex()}')
+    return(sys_key.hex())
 
     # Initialize registry access function
-    h = RegHive(argv[1])
-    sam_key = get_hbootkey(h, sys_key)
-    print(f'SamKey: {sam_key.hex()}')
+    #h = RegHive(argv[1])
+    #sam_key = get_hbootkey(h, sys_key)
+    #print(f'SamKey: {sam_key.hex()}')
 
     # list users and hashes
-    get_hashes(h, sam_key)
+    #get_hashes(h, sam_key)
 
 
 if __name__ == "__main__":

