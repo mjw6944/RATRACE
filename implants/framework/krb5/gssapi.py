@@ -28,7 +28,7 @@ from Crypto.Hash import HMAC, MD5
 from Crypto.Cipher import ARC4
 
 from framework.structure import Structure
-from framework.krb5 import constants, crypto
+import constants, crypto
 
 # Our random number generator
 try:

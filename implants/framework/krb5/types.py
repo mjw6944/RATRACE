@@ -47,8 +47,8 @@ from six import ensure_binary
 import sys
 sys.path.append('../framework')
 
-from framework.krb5 import asn1
-from framework.krb5 import constants
+import asn1
+import constants
 
 
 class KerberosException(Exception):

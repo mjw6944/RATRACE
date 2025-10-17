@@ -27,14 +27,14 @@ from __future__ import division
 from __future__ import print_function
 import sys
 sys.path.append('../framework')
-from framework.v5.ndr import NDRCALL, NDRENUM, NDRUNION, NDRUniConformantVaryingArray, NDRPOINTER, NDR, NDRSTRUCT, \
+from ndr import NDRCALL, NDRENUM, NDRUNION, NDRUniConformantVaryingArray, NDRPOINTER, NDR, NDRSTRUCT, \
     NDRUniConformantArray
-from framework.v5.dtypes import DWORD, LPWSTR, STR, LUID, LONG, ULONG, RPC_UNICODE_STRING, PRPC_SID, LPBYTE, \
+from dtypes import DWORD, LPWSTR, STR, LUID, LONG, ULONG, RPC_UNICODE_STRING, PRPC_SID, LPBYTE, \
     LARGE_INTEGER, NTSTATUS, RPC_SID, ACCESS_MASK, UCHAR, PRPC_UNICODE_STRING, PLARGE_INTEGER, USHORT, \
     SECURITY_INFORMATION, NULL, MAXIMUM_ALLOWED, GUID, SECURITY_DESCRIPTOR, OWNER_SECURITY_INFORMATION
 from framework.uuid import uuidtup_to_bin
-from framework.v5.enum import Enum
-from framework.v5.rpcrt import DCERPCException
+from enum import Enum
+from rpcrt import DCERPCException
 
 MSRPC_UUID_LSAD  = uuidtup_to_bin(('12345778-1234-ABCD-EF00-0123456789AB','0.0'))
 

@@ -29,13 +29,13 @@ import sys
 sys.path.append('../implants')
 from binascii import unhexlify
 
-from v5.ndr import NDRCALL, NDR, NDRSTRUCT, NDRUNION, NDRPOINTER, NDRUniConformantArray, \
+from framework.v5.ndr import NDRCALL, NDR, NDRSTRUCT, NDRUNION, NDRPOINTER, NDRUniConformantArray, \
     NDRUniConformantVaryingArray, NDRENUM
-from v5.dtypes import NULL, RPC_UNICODE_STRING, ULONG, USHORT, UCHAR, LARGE_INTEGER, RPC_SID, LONG, STR, \
+from framework.v5.dtypes import NULL, RPC_UNICODE_STRING, ULONG, USHORT, UCHAR, LARGE_INTEGER, RPC_SID, LONG, STR, \
     LPBYTE, SECURITY_INFORMATION, PRPC_SID, PRPC_UNICODE_STRING, LPWSTR
-from v5.rpcrt import DCERPCException
+from framework.v5.rpcrt import DCERPCException
 from uuid import uuidtup_to_bin
-from v5.enum import Enum
+from framework.v5.enum import Enum
 from structure import Structure
 
 import struct
