@@ -25,7 +25,8 @@
 from __future__ import division
 from __future__ import print_function
 from Crypto.Cipher import DES, AES
-
+import sys
+sys.path.append('../implants')
 from struct import pack, unpack
 from implants.framework.structure import Structure
 import hmac, hashlib

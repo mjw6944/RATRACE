@@ -26,6 +26,8 @@
 import time
 from struct import pack, unpack
 from six import b
+import sys
+sys.path.append('../implants/framework')
 from ndr import NDRCALL, NDRSTRUCT, NDRENUM, NDRUNION, NDRPOINTER, NDRUniConformantArray, \
     NDRUniFixedArray, NDRUniConformantVaryingArray
 from dtypes import WSTR, LPWSTR, DWORD, ULONG, USHORT, PGUID, NTSTATUS, NULL, LONG, UCHAR, PRPC_SID, \

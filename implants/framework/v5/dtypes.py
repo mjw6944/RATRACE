@@ -20,6 +20,9 @@ from __future__ import print_function
 from struct import pack, unpack
 from six import binary_type
 
+import sys
+sys.path.append('../implants/framework')
+
 from implants.framework.v5.ndr import NDRULONG, NDRUHYPER, NDRSHORT, NDRLONG, NDRPOINTER, NDRUniConformantArray, \
     NDRUniFixedArray, NDR, NDRHYPER, NDRSMALL, NDRPOINTERNULL, NDRSTRUCT, \
     NDRUSMALL, NDRBOOLEAN, NDRUSHORT, NDRFLOAT, NDRDOUBLEFLOAT, NULL

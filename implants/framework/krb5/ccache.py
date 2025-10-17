@@ -22,6 +22,8 @@ from __future__ import division
 from __future__ import print_function
 from datetime import datetime, timezone
 import os
+import sys
+sys.path.append('../implants/framework')
 from struct import pack, unpack, calcsize
 from six import b, PY2
 

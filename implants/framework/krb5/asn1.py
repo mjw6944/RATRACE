@@ -44,6 +44,9 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+import sys
+sys.path.append('../implants/framework')
+
 from pyasn1.type import tag, namedtype, univ, constraint, char, useful
 
 from implants.framework.krb5 import constants

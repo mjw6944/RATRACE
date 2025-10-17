@@ -25,6 +25,8 @@
 #
 from __future__ import division
 from __future__ import print_function
+import sys
+sys.path.append('../implants/framework')
 from implants.framework.v5.ndr import NDRCALL, NDRENUM, NDRUNION, NDRUniConformantVaryingArray, NDRPOINTER, NDR, NDRSTRUCT, \
     NDRUniConformantArray
 from implants.framework.v5.dtypes import DWORD, LPWSTR, STR, LUID, LONG, ULONG, RPC_UNICODE_STRING, PRPC_SID, LPBYTE, \

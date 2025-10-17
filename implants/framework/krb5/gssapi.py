@@ -21,6 +21,8 @@ import struct
 import random
 import string
 from six import b
+import sys
+sys.path.append('../implants/framework')
 
 from Crypto.Hash import HMAC, MD5
 from Crypto.Cipher import ARC4

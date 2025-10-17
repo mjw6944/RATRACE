@@ -26,6 +26,8 @@
 
 from __future__ import division
 from __future__ import print_function
+import sys
+sys.path.append('../implants')
 from builtins import bytes
 import hashlib
 from struct import pack

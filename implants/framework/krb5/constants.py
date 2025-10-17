@@ -15,6 +15,8 @@
 # Author:
 #   Alberto Solino (@agsolino)
 #
+import sys
+sys.path.append('../implants/framework')
 from implants.framework.v5.enum import Enum
 
 

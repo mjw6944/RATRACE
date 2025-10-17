@@ -25,6 +25,8 @@
 #
 from __future__ import division
 from __future__ import print_function
+import sys
+sys.path.append('../implants')
 from binascii import unhexlify
 
 from implants.framework.v5.ndr import NDRCALL, NDR, NDRSTRUCT, NDRUNION, NDRPOINTER, NDRUniConformantArray, \

@@ -27,6 +27,9 @@ import sys
 from binascii import unhexlify
 from Crypto.Cipher import ARC4
 
+import sys
+sys.path.append('../implants/framework')
+
 from implants.framework.readNTDS import ntlm, LOG
 from implants.framework.structure import Structure, pack, unpack
 from implants.framework.krb5 import kerberosv5, gssapi
