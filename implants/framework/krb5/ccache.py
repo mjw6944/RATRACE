@@ -32,7 +32,7 @@ from pyasn1.type.univ import noValue
 from binascii import hexlify
 
 from framework.structure import Structure
-import crypto, constants, types
+import .crypto, .constants, .types
 from asn1 import AS_REP, seq_set, TGS_REP, EncTGSRepPart, EncASRepPart, Ticket, KRB_CRED, \
     EncKrbCredPart, KrbCredInfo, seq_set_iter
 from types import KerberosTime

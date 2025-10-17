@@ -32,11 +32,11 @@ from binascii import unhexlify, hexlify
 import sys
 sys.path.append('../framework')
 
-from asn1 import AS_REQ, AP_REQ, TGS_REQ, KERB_PA_PAC_REQUEST, KRB_ERROR, PA_ENC_TS_ENC, AS_REP, TGS_REP, \
+from .asn1 import AS_REQ, AP_REQ, TGS_REQ, KERB_PA_PAC_REQUEST, KRB_ERROR, PA_ENC_TS_ENC, AS_REP, TGS_REP, \
     EncryptedData, Authenticator, EncASRepPart, EncTGSRepPart, seq_set, seq_set_iter, KERB_ERROR_DATA, METHOD_DATA, \
     ETYPE_INFO2, ETYPE_INFO, AP_REP, EncAPRepPart, KERB_SUPERSEDED_BY_USER
-from types import KerberosTime, Principal, Ticket
-from gssapi import CheckSumField, GSS_C_DCE_STYLE, GSS_C_MUTUAL_FLAG, GSS_C_REPLAY_FLAG, \
+from .types import KerberosTime, Principal, Ticket
+from .gssapi import CheckSumField, GSS_C_DCE_STYLE, GSS_C_MUTUAL_FLAG, GSS_C_REPLAY_FLAG, \
     GSS_C_SEQUENCE_FLAG, GSS_C_CONF_FLAG, GSS_C_INTEG_FLAG
 import constants
 from crypto import Key, _enctype_table, InvalidChecksum
