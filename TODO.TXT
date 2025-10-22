@@ -1,28 +1,28 @@
 ###THINGS TO DO###
 Ratrace / main
 ---Important---
-- Improve sendall to not suck
-- gather hostnames and such
+- test new functionality
+- make the README.md actually bearable
 
 ---Nice to have---
 - implement a themes feature
 - make exit function more fun (goodbye messages)
 - make a fun.py file to hold splash art and goodbye message code
+- scheme up additional relay scheme that can allow use of different protocols IE mail mouse
+    - might rename "main.py" to "ratrace.py" when this happens
 
 copybarav2
 ---Important---
-- Auto restart entire function when error #might not be needed? Stress test when possible
-- Store images in base 64 to reduce footprint
+- Auto restart entire function when error
+    - might not be needed? Stress test when possible
 
 Future
 ---Important---
-- some docker-esk way to ensure proper libraries / functions are installed upon setup
 - Setup script that automatically generates payloads given an (attacker) IP address
-- implant loader script that utilizes "exec()" to perform fileless execution
-    - checks OS to load specific malware types or persistence methods
-    - Persistence via register keys or task scheduler executed at system level
 
 ---New Implants---
+- Mail Mouse - SMTP based implant module that also messes with the mouse cursor
 - Mimikitty - bootleg mimikatz utilizing "store passwords using reversible encryption" setting
+    -Mimikitty has hit some snags, currently suspending development until later...
 - Canadian Ransomware - ransomware that only encrypts one file, you have to play hockey or do canadian trivia to
     unencrypt the data, the ransomware is polite in all its messaging

